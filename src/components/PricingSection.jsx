@@ -1,63 +1,117 @@
 function PricingSection() {
-  const plans = [
+  const planGroups = [
     {
-      id: 1,
-      name: "Resume Boost Plan",
-      price: "$100",
-      period: "One-Time",
-      icon: "📄",
-      description: "Perfect for candidates who want a strong ATS-friendly resume before applying.",
-      features: [
-        "ATS-friendly resume creation / revamp",
-        "Optimized for recruiter & job portal screening",
-        "Role-specific keywords & clean formatting",
-        "Ideal for freshers, switchers & experienced professionals."
-      ],
-      highlight: "Best starting point if your resume isn't getting callbacks.",
-      highlightIcon: "→"
+      title: "Placement Tracks",
+      subtitle: "11% success fee after placement",
+      plans: [
+        {
+          id: 1,
+          name: "Prime",
+          price: "$500",
+          period: "",
+          icon: "🎯",
+          description: "Placement Track — we apply until you get placed.",
+          features: [
+            "30 job applications per day",
+            "Targeted placement support",
+            "Resume tailored for each application"
+          ],
+          successFee: "11% after placement"
+        },
+        {
+          id: 2,
+          name: "Prime Plus",
+          price: "$1,000",
+          period: "",
+          icon: "⚡",
+          description: "Turbo Apply — double the applications for faster results.",
+          features: [
+            "60 job applications per day",
+            "Wider reach, more interviews",
+            "Full placement track support"
+          ],
+          successFee: "11% after placement"
+        },
+        {
+          id: 3,
+          name: "Ultra Prime",
+          price: "$5,000",
+          period: "",
+          icon: "👑",
+          description: "End-to-End — white-glove support from apply to offer.",
+          features: [
+            "30 job applications per day",
+            "Assessments & proxy included",
+            "Full preparation + application + placement"
+          ],
+          successFee: "11% after placement"
+        }
+      ]
     },
     {
-      id: 2,
-      name: "Starter Plan",
-      price: "$150",
-      period: "/ Month",
-      icon: "💼",
-      description: "For consistent job visibility with zero effort.",
-      features: [
-        "30 targeted job applications daily",
-        "Resume customized for each role",
-        "ATS-friendly resume usage",
-        "Zero manual effort"
-      ],
-      badge: "Best Value"
+      title: "Apply Only — Campaigns",
+      subtitle: "No success fee; assessments/proxy not included",
+      plans: [
+        {
+          id: 4,
+          name: "Apply Only 60",
+          price: "$350",
+          period: "",
+          icon: "📤",
+          description: "Campaign — 30 applications/day for 60 days.",
+          features: [
+            "30 job applications per day",
+            "60-day campaign",
+            "No success fee"
+          ],
+          noSuccessFee: true
+        },
+        {
+          id: 5,
+          name: "Apply Only 30",
+          price: "$200",
+          period: "",
+          icon: "📋",
+          description: "Campaign — 30 applications/day for 30 days.",
+          features: [
+            "30 job applications per day",
+            "30-day campaign",
+            "No success fee"
+          ],
+          noSuccessFee: true
+        }
+      ]
     },
     {
-      id: 3,
-      name: "Growth Plan",
-      price: "$200",
-      period: "/ Month",
-      icon: "🚀",
-      description: "For faster results and wider reach.",
-      features: [
-        "40 targeted job applications daily",
-        "Resume customized for every application",
-        "Higher interview conversion rate",
-        "Broader portal coverage"
-      ],
-      successFee: "Once placed, 10% of your yearly CTC"
-    },
-    {
-      id: 4,
-      name: "Premium Plan",
-      price: "$500",
-      period: "",
-      icon: "🔥",
-      description: "For serious job seekers who want preparation + applications.",
-      features: [
-        "We apply until you get placed",
-        "Continuous resume updates",
-        "Offer training",
-        "Interview preparation & mock interviews"
+      title: "Add-ons",
+      subtitle: null,
+      plans: [
+        {
+          id: 6,
+          name: "Resume Studio",
+          price: "$100",
+          period: "one-time",
+          icon: "📄",
+          description: "ATS Smart — resume built to pass recruiters & job portals.",
+          features: [
+            "ATS-friendly resume creation / revamp",
+            "Role-specific keywords & clean formatting",
+            "Ideal for freshers, switchers & experienced professionals"
+          ]
+        },
+        {
+          id: 7,
+          name: "Career Coaching",
+          price: "$50",
+          period: "per hour",
+          icon: "💬",
+          description: "1:1 Expert — 60-minute session with a career specialist.",
+          features: [
+            "60-minute 1:1 session",
+            "Interview prep, strategy & feedback",
+            "Customized to your goals"
+          ]
+        }
       ]
     }
   ]
@@ -88,77 +142,105 @@ function PricingSection() {
           </div>
         </div>
 
-        {/* Pricing Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto mb-8 md:mb-12">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className="relative bg-white/10 backdrop-blur-lg rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 border-2 border-purple-500/50 hover:border-purple-400/70 transition shadow-xl"
-            >
-              {/* Best Value Badge */}
-              {plan.badge && (
-                <div className="absolute -top-3 -right-3 bg-yellow-400 border-2 border-green-500 rounded-lg px-3 py-1 text-xs md:text-sm font-bold text-black">
-                  {plan.badge}
-                </div>
-              )}
-
-              {/* Plan Header */}
-              <div className="flex items-start gap-3 mb-4">
-                <span className="text-3xl md:text-4xl">{plan.icon}</span>
-                <div className="flex-1">
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1">
-                    {plan.name}
-                  </h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl md:text-3xl font-bold text-yellow-400">
-                      {plan.price}
-                    </span>
-                    <span className="text-white/80 text-sm md:text-base">
-                      {plan.period}
-                    </span>
-                  </div>
-                </div>
+        {/* Pricing Plans by Group */}
+        <div className="max-w-6xl mx-auto mb-8 md:mb-12 space-y-10 lg:space-y-14">
+          {planGroups.map((group) => (
+            <div key={group.title}>
+              {/* Group Header */}
+              <div className="text-center mb-6 md:mb-8">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-1">
+                  {group.title}
+                </h3>
+                {group.subtitle && (
+                  <p className="text-white/80 text-sm md:text-base">
+                    {group.subtitle}
+                  </p>
+                )}
               </div>
 
-              {/* Description */}
-              <p className="text-white/90 text-sm md:text-base mb-4 md:mb-6">
-                {plan.description}
-              </p>
+              {/* Plans Grid */}
+              <div
+                className={`grid gap-4 md:gap-6 lg:gap-8 ${
+                  group.plans.length === 3
+                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    : group.plans.length === 2
+                    ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
+                    : "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
+                }`}
+              >
+                {group.plans.map((plan) => (
+                  <div
+                    key={plan.id}
+                    className="relative bg-white/10 backdrop-blur-lg rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 border-2 border-purple-500/50 hover:border-purple-400/70 transition shadow-xl"
+                  >
+                    {/* Best Value Badge */}
+                    {plan.badge && (
+                      <div className="absolute -top-3 -right-3 bg-yellow-400 border-2 border-green-500 rounded-lg px-3 py-1 text-xs md:text-sm font-bold text-black">
+                        {plan.badge}
+                      </div>
+                    )}
 
-              {/* Features */}
-              <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-green-400 mt-1">✓</span>
-                    <span className="text-white/90 text-xs md:text-sm flex-1">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                    {/* No Success Fee Badge */}
+                    {plan.noSuccessFee && (
+                      <div className="absolute -top-3 -right-3 bg-green-500/90 border-2 border-green-400 rounded-lg px-3 py-1 text-xs md:text-sm font-bold text-white">
+                        No success fee
+                      </div>
+                    )}
 
-              {/* Success Fee */}
-              {plan.successFee && (
-                <div className="mt-4 p-3 bg-yellow-400/20 border border-yellow-400/40 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-yellow-400">💰</span>
-                    <span className="text-white font-semibold text-sm md:text-base">
-                      Success Fee:
-                    </span>
+                    {/* Plan Header */}
+                    <div className="flex items-start gap-3 mb-4">
+                      <span className="text-3xl md:text-4xl">{plan.icon}</span>
+                      <div className="flex-1">
+                        <h4 className="text-xl md:text-2xl font-bold text-white mb-1">
+                          {plan.name}
+                        </h4>
+                        <div className="flex items-baseline gap-1 flex-wrap">
+                          <span className="text-2xl md:text-3xl font-bold text-yellow-400">
+                            {plan.price}
+                          </span>
+                          {plan.period && (
+                            <span className="text-white/80 text-sm md:text-base">
+                              {plan.period}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-white/90 text-sm md:text-base mb-4 md:mb-6">
+                      {plan.description}
+                    </p>
+
+                    {/* Features */}
+                    <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-green-400 mt-1">✓</span>
+                          <span className="text-white/90 text-xs md:text-sm flex-1">
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Success Fee */}
+                    {plan.successFee && (
+                      <div className="mt-4 p-3 bg-yellow-400/20 border border-yellow-400/40 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-yellow-400">💰</span>
+                          <span className="text-white font-semibold text-sm md:text-base">
+                            Success Fee:
+                          </span>
+                        </div>
+                        <p className="text-white/90 text-xs md:text-sm ml-6">
+                          {plan.successFee}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  <p className="text-white/90 text-xs md:text-sm ml-6">
-                    {plan.successFee}
-                  </p>
-                </div>
-              )}
-
-              {/* Highlight */}
-              {plan.highlight && (
-                <div className="mt-4 flex items-center gap-2 text-orange-400 text-xs md:text-sm">
-                  <span>{plan.highlightIcon}</span>
-                  <span>{plan.highlight}</span>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
           ))}
         </div>
