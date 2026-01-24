@@ -4,7 +4,7 @@
     "name": "Aarav S.",
     "role": "DevOps Engineer",
     "company": "Ed‑tech firm",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.9,
     "quote": "Focused prep, no fluff. Passed AWS SAA in 21 days."
@@ -14,7 +14,7 @@
     "name": "Neha P.",
     "role": "ML Engineer",
     "company": "Fintech startup",
-    "city": "Hyderabad",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 5.0,
     "quote": "Crisp, keyword‑mapped résumé that actually reads like me."
@@ -24,7 +24,7 @@
     "name": "Vikram T.",
     "role": "QA Engineer",
     "company": "Energy major",
-    "city": "Delhi NCR",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.8,
     "quote": "Mock loops mirrored the real thing—walked in confident and got the offer."
@@ -34,7 +34,7 @@
     "name": "Sanya R.",
     "role": "QA Engineer",
     "company": "Energy major",
-    "city": "Kolkata",
+    "city": "US",
     "service": "Clear My Assessment",
     "rating": 4.7,
     "quote": "Timed drills + tips boosted my score beyond the cutoff."
@@ -44,7 +44,7 @@
     "name": "Ishaan K.",
     "role": "Full‑Stack Developer",
     "company": "Media house",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Precision Job Marketing",
     "rating": 4.7,
     "quote": "My profile finally reached the right hiring managers—interviews started within a week."
@@ -54,7 +54,7 @@
     "name": "Mira D.",
     "role": "QA Engineer",
     "company": "Global bank",
-    "city": "Mumbai",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.9,
     "quote": "Crisp, keyword‑mapped résumé that actually reads like me."
@@ -64,7 +64,7 @@
     "name": "Rohit B.",
     "role": "Security Analyst",
     "company": "E‑commerce brand",
-    "city": "Delhi NCR",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.7,
     "quote": "Crisp, keyword‑mapped résumé that actually reads like me."
@@ -74,7 +74,7 @@
     "name": "Priya M.",
     "role": "Cloud Engineer",
     "company": "Ed‑tech firm",
-    "city": "Pune",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.8,
     "quote": "Mentor jumped on a call and walked me through the solution politely and fast."
@@ -84,7 +84,7 @@
     "name": "Karthik J.",
     "role": "Android Developer",
     "company": "Healthcare tech",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Precision Job Marketing",
     "rating": 4.9,
     "quote": "From invisible to in‑demand. The campaign brought quality leads, not spam."
@@ -94,7 +94,7 @@
     "name": "Ananya V.",
     "role": "Frontend Engineer",
     "company": "Ed‑tech firm",
-    "city": "Chennai",
+    "city": "US",
     "service": "Clear My Assessment",
     "rating": 4.6,
     "quote": "They decoded the pattern and I cleared the online assessment smoothly."
@@ -104,7 +104,7 @@
     "name": "Deepak C.",
     "role": "Frontend Engineer",
     "company": "Ed‑tech firm",
-    "city": "Remote",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.7,
     "quote": "They helped me tell tighter stories—STAR answers finally clicked."
@@ -114,7 +114,7 @@
     "name": "Shruti L.",
     "role": "Cloud Engineer",
     "company": "Healthcare tech",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 5.0,
     "quote": "One edit and the difference was night and day—shortlisted twice the same week."
@@ -124,7 +124,7 @@
     "name": "Farhan A.",
     "role": "Backend Engineer",
     "company": "Fintech startup",
-    "city": "Kolkata",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.8,
     "quote": "Mentor jumped on a call and walked me through the solution politely and fast."
@@ -134,7 +134,7 @@
     "name": "Simran G.",
     "role": "Scrum Master",
     "company": "Fintech startup",
-    "city": "Pune",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.8,
     "quote": "They helped me tell tighter stories—STAR answers finally clicked."
@@ -144,7 +144,7 @@
     "name": "Harsh V.",
     "role": "Data Analyst",
     "company": "E‑commerce brand",
-    "city": "Remote",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 5.0,
     "quote": "Crisp, keyword‑mapped résumé that actually reads like me."
@@ -154,7 +154,7 @@
     "name": "Ritika S.",
     "role": "Android Developer",
     "company": "Logistics unicorn",
-    "city": "Remote",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.7,
     "quote": "The study map was gold—cleared Azure Admin on first attempt."
@@ -164,7 +164,7 @@
     "name": "Arjun P.",
     "role": "Frontend Engineer",
     "company": "Ed‑tech firm",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.9,
     "quote": "Focused prep, no fluff. Passed AWS SAA in 21 days."
@@ -174,7 +174,7 @@
     "name": "Pooja K.",
     "role": "QA Engineer",
     "company": "Ed‑tech firm",
-    "city": "Chennai",
+    "city": "US",
     "service": "Precision Job Marketing",
     "rating": 4.8,
     "quote": "My profile finally reached the right hiring managers—interviews started within a week."
@@ -184,7 +184,7 @@
     "name": "Naveen R.",
     "role": "DevOps Engineer",
     "company": "Logistics unicorn",
-    "city": "Chennai",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.6,
     "quote": "Mentor jumped on a call and walked me through the solution politely and fast."
@@ -194,7 +194,7 @@
     "name": "Tanvi S.",
     "role": "Data Analyst",
     "company": "Global bank",
-    "city": "Mumbai",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.9,
     "quote": "Crisp, keyword‑mapped résumé that actually reads like me."
@@ -204,7 +204,7 @@
     "name": "Devansh M.",
     "role": "Frontend Engineer",
     "company": "Fintech startup",
-    "city": "Kolkata",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.6,
     "quote": "They turned my duties into impact—ATS score up, callbacks up."
@@ -214,7 +214,7 @@
     "name": "Kavya H.",
     "role": "Frontend Engineer",
     "company": "Ed‑tech firm",
-    "city": "Remote",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.9,
     "quote": "One edit and the difference was night and day—shortlisted twice the same week."
@@ -224,7 +224,7 @@
     "name": "Yash N.",
     "role": "Full‑Stack Developer",
     "company": "Fintech startup",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 5.0,
     "quote": "Sharp feedback, targeted drills, and frameworks that stick."
@@ -234,7 +234,7 @@
     "name": "Aditi J.",
     "role": "QA Engineer",
     "company": "Global bank",
-    "city": "Pune",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 5.0,
     "quote": "Real‑time help turned blockers into learning moments."
@@ -244,7 +244,7 @@
     "name": "Manav T.",
     "role": "Data Analyst",
     "company": "Global bank",
-    "city": "Pune",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.8,
     "quote": "Mock loops mirrored the real thing—walked in confident and got the offer."
@@ -254,7 +254,7 @@
     "name": "Srishti B.",
     "role": "DevOps Engineer",
     "company": "Global bank",
-    "city": "Pune",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.8,
     "quote": "They helped me tell tighter stories—STAR answers finally clicked."
@@ -264,7 +264,7 @@
     "name": "Aditya R.",
     "role": "Product Analyst",
     "company": "Ed‑tech firm",
-    "city": "Mumbai",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.8,
     "quote": "Sharp feedback, targeted drills, and frameworks that stick."
@@ -274,7 +274,7 @@
     "name": "Meera S.",
     "role": "Full‑Stack Developer",
     "company": "SaaS company",
-    "city": "Pune",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.8,
     "quote": "They helped me tell tighter stories—STAR answers finally clicked."
@@ -284,7 +284,7 @@
     "name": "Aman G.",
     "role": "Android Developer",
     "company": "Global bank",
-    "city": "Mumbai",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.6,
     "quote": "They helped me tell tighter stories—STAR answers finally clicked."
@@ -294,7 +294,7 @@
     "name": "Sakshi P.",
     "role": "Security Analyst",
     "company": "Ed‑tech firm",
-    "city": "Chennai",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.6,
     "quote": "Practice tests matched the exam vibe—zero surprises on the day."
@@ -304,7 +304,7 @@
     "name": "Rahul D.",
     "role": "ML Engineer",
     "company": "Fintech startup",
-    "city": "Chennai",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.9,
     "quote": "Practice tests matched the exam vibe—zero surprises on the day."
@@ -314,7 +314,7 @@
     "name": "Trisha N.",
     "role": "ML Engineer",
     "company": "Healthcare tech",
-    "city": "Mumbai",
+    "city": "US",
     "service": "Clear My Assessment",
     "rating": 4.9,
     "quote": "From anxious to ready—mock assessments made all the difference."
@@ -324,7 +324,7 @@
     "name": "Varun K.",
     "role": "DevOps Engineer",
     "company": "Ed‑tech firm",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Clear My Assessment",
     "rating": 4.9,
     "quote": "They decoded the pattern and I cleared the online assessment smoothly."
@@ -334,7 +334,7 @@
     "name": "Sneha C.",
     "role": "DevOps Engineer",
     "company": "Ed‑tech firm",
-    "city": "Remote",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.9,
     "quote": "Focused prep, no fluff. Passed AWS SAA in 21 days."
@@ -344,7 +344,7 @@
     "name": "Om P.",
     "role": "ML Engineer",
     "company": "Ed‑tech firm",
-    "city": "Chennai",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.7,
     "quote": "Practice tests matched the exam vibe—zero surprises on the day."
@@ -354,7 +354,7 @@
     "name": "Kaushik M.",
     "role": "Android Developer",
     "company": "Global bank",
-    "city": "Remote",
+    "city": "US",
     "service": "Interview Accelerator",
     "rating": 4.9,
     "quote": "Sharp feedback, targeted drills, and frameworks that stick."
@@ -364,7 +364,7 @@
     "name": "Ira V.",
     "role": "Security Analyst",
     "company": "Global bank",
-    "city": "Pune",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.8,
     "quote": "Got unstuck on a live sprint and delivered on time—zero panic."
@@ -374,7 +374,7 @@
     "name": "Zara F.",
     "role": "Product Analyst",
     "company": "Healthcare tech",
-    "city": "Kolkata",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.9,
     "quote": "Got unstuck on a live sprint and delivered on time—zero panic."
@@ -384,7 +384,7 @@
     "name": "Rudra S.",
     "role": "Scrum Master",
     "company": "Logistics unicorn",
-    "city": "Kolkata",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.9,
     "quote": "Focused prep, no fluff. Passed AWS SAA in 21 days."
@@ -394,7 +394,7 @@
     "name": "Dhruv K.",
     "role": "Security Analyst",
     "company": "Healthcare tech",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.9,
     "quote": "The study map was gold—cleared Azure Admin on first attempt."
@@ -404,7 +404,7 @@
     "name": "Anvi R.",
     "role": "Scrum Master",
     "company": "Media house",
-    "city": "Pune",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.8,
     "quote": "They turned my duties into impact—ATS score up, callbacks up."
@@ -414,7 +414,7 @@
     "name": "Mahima T.",
     "role": "Full‑Stack Developer",
     "company": "Fintech startup",
-    "city": "Delhi NCR",
+    "city": "US",
     "service": "Clear My Assessment",
     "rating": 5.0,
     "quote": "Timed drills + tips boosted my score beyond the cutoff."
@@ -424,7 +424,7 @@
     "name": "Uday P.",
     "role": "Full‑Stack Developer",
     "company": "SaaS company",
-    "city": "Pune",
+    "city": "US",
     "service": "Precision Job Marketing",
     "rating": 4.7,
     "quote": "Their outreach playbook landed me 3 calls in 10 days—targeted and classy."
@@ -434,7 +434,7 @@
     "name": "Ishan S.",
     "role": "Security Analyst",
     "company": "Fintech startup",
-    "city": "Chennai",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.8,
     "quote": "Crisp, keyword‑mapped résumé that actually reads like me."
@@ -444,7 +444,7 @@
     "name": "Tulika J.",
     "role": "Scrum Master",
     "company": "SaaS company",
-    "city": "Delhi NCR",
+    "city": "US",
     "service": "Clear My Assessment",
     "rating": 4.8,
     "quote": "From anxious to ready—mock assessments made all the difference."
@@ -454,7 +454,7 @@
     "name": "Kabir A.",
     "role": "Cloud Engineer",
     "company": "Ed‑tech firm",
-    "city": "Mumbai",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.8,
     "quote": "Mentor jumped on a call and walked me through the solution politely and fast."
@@ -464,7 +464,7 @@
     "name": "Tanya V.",
     "role": "Frontend Engineer",
     "company": "Logistics unicorn",
-    "city": "Bengaluru",
+    "city": "US",
     "service": "Precision Job Marketing",
     "rating": 4.7,
     "quote": "From invisible to in‑demand. The campaign brought quality leads, not spam."
@@ -474,7 +474,7 @@
     "name": "Pranav C.",
     "role": "DevOps Engineer",
     "company": "SaaS company",
-    "city": "Chennai",
+    "city": "US",
     "service": "Certification Fast-Track",
     "rating": 4.7,
     "quote": "Practice tests matched the exam vibe—zero surprises on the day."
@@ -484,7 +484,7 @@
     "name": "Gauri L.",
     "role": "Android Developer",
     "company": "Global bank",
-    "city": "Chennai",
+    "city": "US",
     "service": "Live Project Assistance",
     "rating": 4.8,
     "quote": "Mentor jumped on a call and walked me through the solution politely and fast."
@@ -494,7 +494,7 @@
     "name": "Rhea D.",
     "role": "Full‑Stack Developer",
     "company": "Energy major",
-    "city": "Delhi NCR",
+    "city": "US",
     "service": "ATS-Smart Résumé",
     "rating": 4.8,
     "quote": "They turned my duties into impact—ATS score up, callbacks up."
