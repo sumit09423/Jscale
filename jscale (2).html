@@ -1,0 +1,4501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JScale — From Resume to Offer Letter</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --bg: #06060e;
+      --bg2: #0a0a18;
+      --bg3: #0d0d1f;
+      --surface: rgba(255, 255, 255, 0.03);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass2: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.07);
+      --text: #eae8f4;
+      --text-dim: rgba(255, 255, 255, 0.55);
+      --text-muted: rgba(255, 255, 255, 0.3);
+      --accent: #8b5cf6;
+      --accent2: #a78bfa;
+      --accent3: #c4b5fd;
+      --accent-glow: rgba(139, 92, 246, 0.35);
+      --accent-deep: #6d28d9;
+      --hot: #ec4899;
+      --hot2: #f472b6;
+      --teal: #14b8a6;
+      --teal2: #2dd4bf;
+      --gold: #f59e0b;
+      --gold2: #fbbf24;
+      --blue: #3b82f6;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --ease: cubic-bezier(.4, 0, .2, 1);
+      --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+      --ease-out: cubic-bezier(0, 0, .2, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: #fff
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    img {
+      max-width: 100%
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--accent), var(--hot));
+      border-radius: 3px
+    }
+
+    /* ============ PRELOADER ============ */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .6s ease, visibility .6s ease
+    }
+
+    .preloader.done {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none
+    }
+
+    .preloader-inner {
+      text-align: center
+    }
+
+    .preloader-logo {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 20px
+    }
+
+    .preloader-logo span {
+      color: var(--accent2)
+    }
+
+    .preloader-bar {
+      width: 200px;
+      height: 3px;
+      background: var(--glass);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .preloader-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--hot));
+      border-radius: 3px;
+      animation: loadBar 1.5s ease forwards
+    }
+
+    @keyframes loadBar {
+      0% {
+        width: 0
+      }
+
+      100% {
+        width: 100%
+      }
+    }
+
+    /* ============ SCROLL PROGRESS ============ */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--hot), var(--teal));
+      z-index: 10000;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: none
+    }
+
+    /* ============ CURSOR ============ */
+    .cursor-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--accent2);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform .15s ease, opacity .3s;
+      mix-blend-mode: screen
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid rgba(167, 139, 250, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9997;
+      transition: transform .25s ease, width .3s, height .3s, border-color .3s;
+      transform: translate(-50%, -50%)
+    }
+
+    .cursor-ring.hover {
+      width: 56px;
+      height: 56px;
+      border-color: var(--accent)
+    }
+
+    /* ============ UTILITY ============ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 28px
+    }
+
+    .section {
+      padding: 120px 0;
+      position: relative
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--accent)
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.12;
+      margin-bottom: 18px
+    }
+
+    .section-subtitle {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 540px;
+      line-height: 1.75
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 72px
+    }
+
+    .section-header .section-subtitle {
+      margin: 0 auto
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent2), var(--hot2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    /* ============ ANIMATED GRADIENT BG ============ */
+    .mesh-gradient {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0
+    }
+
+    .mesh-gradient .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .12;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite
+    }
+
+    .blob-1 {
+      width: 600px;
+      height: 600px;
+      background: var(--accent);
+      top: -200px;
+      right: -100px;
+      animation: blobMove1 20s infinite
+    }
+
+    .blob-2 {
+      width: 500px;
+      height: 500px;
+      background: var(--hot);
+      bottom: -200px;
+      left: -100px;
+      animation: blobMove2 25s infinite
+    }
+
+    .blob-3 {
+      width: 400px;
+      height: 400px;
+      background: var(--teal);
+      top: 50%;
+      left: 50%;
+      animation: blobMove3 18s infinite
+    }
+
+    @keyframes blobMove1 {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1)
+      }
+
+      33% {
+        transform: translate(-80px, 60px) scale(1.1)
+      }
+
+      66% {
+        transform: translate(40px, -40px) scale(.9)
+      }
+    }
+
+    @keyframes blobMove2 {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1)
+      }
+
+      33% {
+        transform: translate(60px, -80px) scale(.9)
+      }
+
+      66% {
+        transform: translate(-40px, 60px) scale(1.15)
+      }
+    }
+
+    @keyframes blobMove3 {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1)
+      }
+
+      33% {
+        transform: translate(-40%, -60%) scale(1.2)
+      }
+
+      66% {
+        transform: translate(-60%, -40%) scale(.85)
+      }
+    }
+
+    /* ============ BUTTONS ============ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 34px;
+      border-radius: 60px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: .92rem;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all .4s var(--ease);
+      letter-spacing: .3px
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 60px;
+      opacity: 0;
+      transition: opacity .4s
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      color: #fff;
+      box-shadow: 0 4px 20px var(--accent-glow)
+    }
+
+    .btn-primary::before {
+      background: linear-gradient(135deg, var(--accent-deep), var(--hot))
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px var(--accent-glow)
+    }
+
+    .btn-primary:hover::before {
+      opacity: 1
+    }
+
+    .btn-primary span {
+      position: relative;
+      z-index: 2
+    }
+
+    .btn-primary .btn-arrow {
+      position: relative;
+      z-index: 2;
+      transition: transform .3s var(--ease-bounce)
+    }
+
+    .btn-primary:hover .btn-arrow {
+      transform: translateX(4px)
+    }
+
+    .btn-secondary {
+      background: var(--glass);
+      color: var(--text);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px)
+    }
+
+    .btn-secondary:hover {
+      background: var(--glass2);
+      border-color: var(--accent);
+      transform: translateY(-3px)
+    }
+
+    .btn-sm {
+      padding: 11px 24px;
+      font-size: .83rem
+    }
+
+    .btn-glow {
+      animation: btnGlow 3s ease-in-out infinite
+    }
+
+    @keyframes btnGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 4px 20px var(--accent-glow)
+      }
+
+      50% {
+        box-shadow: 0 4px 50px rgba(139, 92, 246, 0.55), 0 0 80px rgba(139, 92, 246, 0.2)
+      }
+    }
+
+    .btn-icon {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    /* ============ GLASS CARD ============ */
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      transition: all .5s var(--ease)
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), transparent, rgba(236, 72, 153, 0.05));
+      opacity: 0;
+      transition: opacity .5s
+    }
+
+    .glass-card:hover {
+      border-color: rgba(139, 92, 246, 0.25);
+      transform: translateY(-6px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35), 0 0 40px rgba(139, 92, 246, 0.08)
+    }
+
+    .glass-card:hover::before {
+      opacity: 1
+    }
+
+    /* Hover border glow - simple approach */
+    .glow-border {
+      position: relative
+    }
+
+    .glow-border::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      transition: border-color .5s;
+      pointer-events: none
+    }
+
+    .glow-border:hover::after {
+      border-color: rgba(139, 92, 246, 0.35)
+    }
+
+    /* ============ REVEAL ANIMATIONS ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all .9s var(--ease)
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all .9s var(--ease)
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0)
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all .9s var(--ease)
+    }
+
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0)
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(.85);
+      transition: all .9s var(--ease)
+    }
+
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1)
+    }
+
+    .stagger-1 {
+      transition-delay: .1s
+    }
+
+    .stagger-2 {
+      transition-delay: .2s
+    }
+
+    .stagger-3 {
+      transition-delay: .3s
+    }
+
+    .stagger-4 {
+      transition-delay: .4s
+    }
+
+    .stagger-5 {
+      transition-delay: .5s
+    }
+
+    .stagger-6 {
+      transition-delay: .6s
+    }
+
+    .stagger-7 {
+      transition-delay: .7s
+    }
+
+    .stagger-8 {
+      transition-delay: .8s
+    }
+
+    /* Text reveal word by word */
+    .text-reveal {
+      overflow: hidden;
+      display: inline-block
+    }
+
+    .text-reveal .word {
+      display: inline-block;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: all .6s var(--ease-bounce)
+    }
+
+    .text-reveal.visible .word {
+      transform: translateY(0);
+      opacity: 1
+    }
+
+    /* ============ NAV ============ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 18px 0;
+      transition: all .4s var(--ease)
+    }
+
+    nav.scrolled {
+      background: rgba(6, 6, 14, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 12px 0
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      position: relative
+    }
+
+    .nav-logo em {
+      font-style: normal;
+      color: var(--accent2)
+    }
+
+    .nav-logo::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--hot));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s var(--ease)
+    }
+
+    .nav-logo:hover::after {
+      transform: scaleX(1)
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none
+    }
+
+    .nav-links a {
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      transition: all .3s;
+      position: relative
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--accent2);
+      transition: width .3s var(--ease)
+    }
+
+    .nav-links a:hover {
+      color: var(--text)
+    }
+
+    .nav-links a:hover::after {
+      width: 100%
+    }
+
+    .nav-cta .btn {
+      padding: 10px 24px;
+      font-size: .83rem
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.4rem;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      transition: background .3s
+    }
+
+    .mobile-toggle:hover {
+      background: var(--glass)
+    }
+
+    /* ============ HERO ============ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 100px;
+      padding-bottom: 60px
+    }
+
+    #heroCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent);
+      z-index: 1
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 680px
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 22px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 60px;
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--accent2);
+      margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+      animation: fadeUp .8s var(--ease) both
+    }
+
+    .hero-badge .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal2);
+      position: relative
+    }
+
+    .hero-badge .pulse::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: var(--teal2);
+      opacity: .4;
+      animation: badgePulse 2s ease infinite
+    }
+
+    @keyframes badgePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .4
+      }
+
+      50% {
+        transform: scale(1.8);
+        opacity: 0
+      }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 6.5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.06;
+      margin-bottom: 28px;
+      animation: fadeUp .8s var(--ease) .15s both
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      position: relative;
+      display: inline-block
+    }
+
+    .hero h1 em .highlight-text {
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(135deg, var(--accent3), var(--hot2), var(--gold2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradientShift 4s ease infinite
+    }
+
+    @keyframes gradientShift {
+
+      0%,
+      100% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+    }
+
+    .hero h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: -4px;
+      right: -4px;
+      height: 14px;
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.2));
+      border-radius: 4px;
+      z-index: 1;
+      transform: skewX(-6deg)
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      line-height: 1.85;
+      margin-bottom: 44px;
+      animation: fadeUp .8s var(--ease) .3s both;
+      max-width: 560px
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp .8s var(--ease) .45s both
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+      animation: fadeUp .8s var(--ease) .6s both
+    }
+
+    .hero-metric {
+      padding: 20px 24px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      transition: all .3s
+    }
+
+    .hero-metric:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      background: var(--glass2)
+    }
+
+    .hero-metric .hm-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent2), var(--hot2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero-metric .hm-label {
+      font-size: .78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      letter-spacing: .5px
+    }
+
+    .hero-visual {
+      position: absolute;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      pointer-events: none
+    }
+
+    .hero-orb-container {
+      position: relative;
+      width: 420px;
+      height: 420px
+    }
+
+    .hero-orb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(from 200deg, var(--accent-deep), var(--hot), var(--accent), var(--teal), var(--accent-deep));
+      filter: blur(80px);
+      opacity: .4;
+      animation: orbSpin 20s linear infinite, orbFloat 8s ease-in-out infinite
+    }
+
+    @keyframes orbSpin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        margin-top: 0
+      }
+
+      50% {
+        margin-top: -40px
+      }
+    }
+
+    .hero-rings {
+      position: absolute;
+      inset: -40px;
+      border: 1px solid rgba(139, 92, 246, 0.1);
+      border-radius: 50%;
+      animation: ringExpand 6s ease-in-out infinite
+    }
+
+    .hero-rings:nth-child(2) {
+      inset: -80px;
+      animation-delay: 2s;
+      border-color: rgba(236, 72, 153, 0.08)
+    }
+
+    .hero-rings:nth-child(3) {
+      inset: -120px;
+      animation-delay: 4s;
+      border-color: rgba(45, 212, 191, 0.06)
+    }
+
+    @keyframes ringExpand {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .5
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: .2
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ============ MARQUEE RIBBON ============ */
+    .ribbon {
+      overflow: hidden;
+      padding: 20px 0;
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      background: var(--surface)
+    }
+
+    .ribbon-track {
+      display: flex;
+      gap: 32px;
+      animation: ribbonScroll 30s linear infinite;
+      width: max-content
+    }
+
+    .ribbon-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--text-muted);
+      white-space: nowrap
+    }
+
+    .ribbon-item .ri-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent)
+    }
+
+    @keyframes ribbonScroll {
+      0% {
+        transform: translateX(0)
+      }
+
+      100% {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* ============ SERVICES ============ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px
+    }
+
+    .service-card {
+      position: relative;
+      overflow: hidden;
+      cursor: default
+    }
+
+    .service-card .card-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--hot), transparent);
+      transform: scaleX(0);
+      transition: transform .5s var(--ease)
+    }
+
+    .service-card:hover .card-accent {
+      transform: scaleX(1)
+    }
+
+    .service-card .card-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(139, 92, 246, 0.06), transparent 50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .4s
+    }
+
+    .service-card:hover .card-glow {
+      opacity: 1
+    }
+
+    .service-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 22px;
+      transition: transform .4s var(--ease-bounce), box-shadow .4s
+    }
+
+    .service-card:hover .service-icon {
+      transform: scale(1.1) rotate(-5deg);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2)
+    }
+
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 14px
+    }
+
+    .service-card ul {
+      list-style: none;
+      margin-bottom: 28px
+    }
+
+    .service-card ul li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--text-dim);
+      font-size: .9rem;
+      margin-bottom: 10px;
+      line-height: 1.6;
+      transition: color .3s, transform .3s
+    }
+
+    .service-card:hover ul li {
+      color: var(--text-dim)
+    }
+
+    .service-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      transition: all .3s
+    }
+
+    .service-card:hover ul li::before {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow)
+    }
+
+    /* ============ PRICING ============ */
+    .pricing-section {
+      background: linear-gradient(180deg, var(--bg), var(--bg2), var(--bg))
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      align-items: stretch
+    }
+
+    .pricing-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      transition: all .5s var(--ease)
+    }
+
+    .pricing-card.featured {
+      border-color: rgba(139, 92, 246, 0.3);
+      background: linear-gradient(180deg, rgba(139, 92, 246, 0.1), var(--glass));
+      z-index: 2;
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.1), 0 20px 60px rgba(0, 0, 0, 0.2);
+      animation: featuredGlow 4s ease-in-out infinite
+    }
+
+    @keyframes featuredGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 40px rgba(139, 92, 246, 0.1), 0 20px 60px rgba(0, 0, 0, 0.2)
+      }
+
+      50% {
+        box-shadow: 0 0 60px rgba(139, 92, 246, 0.2), 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 100px rgba(139, 92, 246, 0.05)
+      }
+    }
+
+    .pricing-card.featured::after {
+      content: 'MOST POPULAR';
+      position: absolute;
+      /* top: -15px; */
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--accent), var(--hot));
+      color: #fff;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 7px 24px;
+      border-radius: 60px;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pricing-tier {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 8px
+    }
+
+    .pricing-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 12px
+    }
+
+    .pricing-price {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+      position: relative;
+      display: inline-block
+    }
+
+    .pricing-price .dollar {
+      font-size: 1.4rem;
+      vertical-align: super;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-right: 2px
+    }
+
+    .pricing-desc {
+      color: var(--text-dim);
+      font-size: .88rem;
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--glass-border);
+      line-height: 1.6
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 36px;
+      flex: 1
+    }
+
+    .pricing-features li {
+      padding: 11px 0;
+      padding-left: 30px;
+      position: relative;
+      color: var(--text-dim);
+      font-size: .88rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.025)
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal2);
+      font-weight: 700;
+      font-size: .9rem
+    }
+
+    .pricing-card .btn {
+      width: 100%
+    }
+
+    .success-note {
+      text-align: center;
+      margin-top: 40px
+    }
+
+    .success-note-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 28px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      font-size: .9rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .success-note-inner .sn-icon {
+      font-size: 1.2rem
+    }
+
+    .success-note-inner span {
+      color: var(--gold2);
+      font-weight: 600
+    }
+
+    /* ============ CAMPAIGNS & ADD-ONS ============ */
+    .campaigns-section {
+      margin-top: 80px
+    }
+
+    .campaigns-header {
+      text-align: center;
+      margin-bottom: 40px
+    }
+
+    .campaigns-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px
+    }
+
+    .campaigns-header p {
+      color: var(--text-dim);
+      font-size: .92rem
+    }
+
+    .campaigns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px
+    }
+
+    .campaign-card {
+      padding: 36px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .campaign-card .no-fee-badge {
+      position: absolute;
+      top: -1px;
+      right: 24px;
+      background: linear-gradient(135deg, var(--teal), #059669);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 7px 18px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3)
+    }
+
+    .campaign-card .cc-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px
+    }
+
+    .campaign-card .cc-icon {
+      font-size: 1.8rem
+    }
+
+    .campaign-card .cc-name {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700
+    }
+
+    .campaign-card .cc-price {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--gold2);
+      margin-bottom: 12px
+    }
+
+    .campaign-card .cc-desc {
+      color: var(--text-dim);
+      font-size: .9rem;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--glass-border)
+    }
+
+    .campaign-card .cc-features {
+      list-style: none;
+      margin-bottom: 28px
+    }
+
+    .campaign-card .cc-features li {
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+      color: var(--text-dim);
+      font-size: .88rem
+    }
+
+    .campaign-card .cc-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal2);
+      font-weight: 700
+    }
+
+    .addons-header {
+      text-align: center;
+      margin: 64px 0 40px
+    }
+
+    .addons-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px
+    }
+
+    .addons-header p {
+      color: var(--text-dim);
+      font-size: .92rem
+    }
+
+    .addons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px
+    }
+
+    .addon-card {
+      padding: 36px;
+      display: flex;
+      flex-direction: column
+    }
+
+    .addon-card .ao-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px
+    }
+
+    .addon-card .ao-icon {
+      font-size: 1.8rem
+    }
+
+    .addon-card .ao-name {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700
+    }
+
+    .addon-card .ao-price {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--gold2);
+      margin-bottom: 4px
+    }
+
+    .addon-card .ao-price span {
+      font-size: .9rem;
+      font-weight: 400;
+      color: var(--text-dim)
+    }
+
+    .addon-card .ao-desc {
+      color: var(--text-dim);
+      font-size: .9rem;
+      margin-bottom: 18px;
+      line-height: 1.6;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--glass-border)
+    }
+
+    .addon-card .ao-features {
+      list-style: none;
+      flex: 1
+    }
+
+    .addon-card .ao-features li {
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+      color: var(--text-dim);
+      font-size: .88rem
+    }
+
+    .addon-card .ao-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal2);
+      font-weight: 700
+    }
+
+    @media(max-width:768px) {
+
+      .campaigns-grid,
+      .addons-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    /* ============ WHY CHOOSE ============ */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px
+    }
+
+    .why-card {
+      padding: 36px;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid transparent;
+      transition: all .4s var(--ease);
+      position: relative;
+      overflow: hidden
+    }
+
+    .why-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.04), transparent);
+      opacity: 0;
+      transition: opacity .4s
+    }
+
+    .why-card:hover {
+      border-color: var(--glass-border);
+      background: var(--glass);
+      transform: translateY(-4px)
+    }
+
+    .why-card:hover::before {
+      opacity: 1
+    }
+
+    .why-icon {
+      font-size: 2rem;
+      margin-bottom: 18px;
+      display: inline-block;
+      transition: transform .4s var(--ease-bounce)
+    }
+
+    .why-card:hover .why-icon {
+      transform: scale(1.15)
+    }
+
+    .why-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px
+    }
+
+    .why-card p {
+      color: var(--text-dim);
+      font-size: .88rem;
+      line-height: 1.7
+    }
+
+    /* ============ COMPANIES ============ */
+    .logos-container {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 48px;
+      padding: 20px 0
+    }
+
+    .logos-container::before,
+    .logos-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      z-index: 2;
+      pointer-events: none
+    }
+
+    .logos-container::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--bg2), transparent)
+    }
+
+    .logos-container::after {
+      right: 0;
+      background: linear-gradient(-90deg, var(--bg2), transparent)
+    }
+
+    .logos-track {
+      display: flex;
+      gap: 28px;
+      animation: logoScroll 28s linear infinite;
+      width: max-content
+    }
+
+    .logo-chip {
+      padding: 14px 28px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      transition: all .3s
+    }
+
+    @keyframes logoScroll {
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px
+    }
+
+    .candidate-card {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .candidate-card .c-header {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .candidate-card .c-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .9rem;
+      color: #fff;
+      flex-shrink: 0
+    }
+
+    .candidate-card .c-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem
+    }
+
+    .candidate-card .c-role {
+      color: var(--accent2);
+      font-size: .82rem;
+      font-weight: 500
+    }
+
+    .candidate-card .c-company {
+      font-size: .85rem;
+      color: var(--text-dim)
+    }
+
+    .candidate-card .c-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .candidate-card .c-tags span {
+      padding: 4px 14px;
+      background: rgba(139, 92, 246, 0.12);
+      border-radius: 60px;
+      font-size: .72rem;
+      color: var(--accent2);
+      font-weight: 500
+    }
+
+    .candidate-card .c-outcome {
+      font-size: .88rem;
+      color: var(--teal2);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    /* ============ STATS ============ */
+    .stats-section {
+      position: relative;
+      overflow: hidden
+    }
+
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.07), rgba(236, 72, 153, 0.04), rgba(20, 184, 166, 0.04));
+      pointer-events: none
+    }
+
+    .stats-section .mesh-line {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+      width: 100%;
+      pointer-events: none
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      text-align: center;
+      position: relative;
+      z-index: 2
+    }
+
+    .stat-item {
+      padding: 40px 20px;
+      border-radius: var(--radius-lg);
+      transition: all .4s
+    }
+
+    .stat-item:hover {
+      background: var(--glass)
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent2), var(--hot2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1
+    }
+
+    .stat-label {
+      font-size: .85rem;
+      color: var(--text-dim);
+      margin-top: 10px;
+      font-weight: 500
+    }
+
+    .stat-bar {
+      width: 60px;
+      height: 3px;
+      background: var(--glass);
+      border-radius: 2px;
+      margin: 12px auto 0;
+      overflow: hidden
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.5s var(--ease)
+    }
+
+    /* ============ CAREER PATH ============ */
+    .career-path-wrapper {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 0
+    }
+
+    .career-path-wrapper .cp-ambient {
+      position: absolute;
+      inset: 0;
+      pointer-events: none
+    }
+
+    .career-path-wrapper .cp-ambient .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .08
+    }
+
+    .career-path-wrapper .cp-ambient .glow-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent);
+      top: 0;
+      left: 20%;
+      animation: cpGlow1 10s ease-in-out infinite
+    }
+
+    .career-path-wrapper .cp-ambient .glow-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--hot);
+      bottom: 10%;
+      right: 15%;
+      animation: cpGlow2 12s ease-in-out infinite
+    }
+
+    @keyframes cpGlow1 {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(40px, 60px)
+      }
+    }
+
+    @keyframes cpGlow2 {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(-30px, -40px)
+      }
+    }
+
+    .cp-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 350px;
+      width: 3px;
+      transform: translateX(-50%);
+      z-index: 1
+    }
+
+    .cp-line-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 2px
+    }
+
+    .cp-line-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      background: linear-gradient(180deg, var(--accent), var(--hot), var(--teal), var(--gold));
+      border-radius: 2px;
+      transition: height 2s var(--ease);
+      box-shadow: 0 0 20px var(--accent-glow)
+    }
+
+    .cp-line-fill.animated {
+      height: 100%
+    }
+
+    .cp-line-pulse {
+      position: absolute;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background: var(--accent2);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 16px var(--accent), 0 0 32px var(--accent-glow);
+      opacity: 0;
+      animation: travelPulse 4.5s ease-in-out infinite
+    }
+
+    .cp-line-fill.animated~.cp-line-pulse {
+      opacity: 1
+    }
+
+    @keyframes travelPulse {
+      0% {
+        top: -10px;
+        opacity: 0
+      }
+
+      10% {
+        opacity: 1
+      }
+
+      90% {
+        opacity: 1
+      }
+
+      100% {
+        top: calc(100% + 10px);
+        opacity: 0
+      }
+    }
+
+    .cp-particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden
+    }
+
+    .cp-particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0
+    }
+
+    .cp-particle:nth-child(1) {
+      width: 4px;
+      height: 4px;
+      left: 12%;
+      background: var(--accent);
+      animation: cpPart 7s ease 0s infinite
+    }
+
+    .cp-particle:nth-child(2) {
+      width: 3px;
+      height: 3px;
+      left: 28%;
+      background: var(--hot);
+      animation: cpPart 9s ease 1.2s infinite
+    }
+
+    .cp-particle:nth-child(3) {
+      width: 5px;
+      height: 5px;
+      left: 68%;
+      background: var(--teal);
+      animation: cpPart 8s ease 2.5s infinite
+    }
+
+    .cp-particle:nth-child(4) {
+      width: 3px;
+      height: 3px;
+      left: 82%;
+      background: var(--gold);
+      animation: cpPart 6s ease .8s infinite
+    }
+
+    .cp-particle:nth-child(5) {
+      width: 4px;
+      height: 4px;
+      left: 45%;
+      background: var(--accent2);
+      animation: cpPart 10s ease 3s infinite
+    }
+
+    .cp-particle:nth-child(6) {
+      width: 3px;
+      height: 3px;
+      left: 92%;
+      background: var(--hot2);
+      animation: cpPart 7.5s ease 1.8s infinite
+    }
+
+    @keyframes cpPart {
+      0% {
+        bottom: -5px;
+        opacity: 0;
+        transform: translateX(0)
+      }
+
+      15% {
+        opacity: .5
+      }
+
+      50% {
+        transform: translateX(15px)
+      }
+
+      85% {
+        opacity: .5
+      }
+
+      100% {
+        bottom: 105%;
+        opacity: 0;
+        transform: translateX(-10px)
+      }
+    }
+
+    .cp-steps {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column
+    }
+
+    .cp-step {
+      display: grid;
+      grid-template-columns: 1fr 90px 1fr;
+      align-items: center;
+      min-height: 170px;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all .8s var(--ease)
+    }
+
+    .cp-step.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .cp-step:nth-child(odd) .cp-content {
+      grid-column: 1;
+      text-align: right;
+      padding-right: 44px
+    }
+
+    .cp-step:nth-child(odd) .cp-detail {
+      grid-column: 3;
+      padding-left: 44px
+    }
+
+    .cp-step:nth-child(even) .cp-content {
+      grid-column: 3;
+      text-align: left;
+      padding-left: 44px
+    }
+
+    .cp-step:nth-child(even) .cp-detail {
+      grid-column: 1;
+      text-align: right;
+      padding-right: 44px
+    }
+
+    .cp-step:nth-child(even) {
+      direction: rtl
+    }
+
+    .cp-step:nth-child(even)>* {
+      direction: ltr
+    }
+
+    .cp-node-wrap {
+      grid-column: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative
+    }
+
+    .cp-node {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: all .4s var(--ease)
+    }
+
+    .cp-node-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid rgba(139, 92, 246, 0.35);
+      transition: all .4s var(--ease)
+    }
+
+    .cp-node:hover .cp-node-bg {
+      border-color: var(--accent);
+      box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(139, 92, 246, 0.12), inset 0 0 20px rgba(139, 92, 246, 0.05)
+    }
+
+    .cp-node-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 92, 246, 0.12);
+      animation: nodeRingPulse 3s ease-in-out infinite
+    }
+
+    @keyframes nodeRingPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: .4
+      }
+
+      50% {
+        transform: scale(1.2);
+        opacity: 0
+      }
+    }
+
+    .cp-node-ring-2 {
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 92, 246, 0.06);
+      animation: nodeRingPulse 3s ease-in-out .6s infinite
+    }
+
+    .cp-node-icon {
+      position: relative;
+      z-index: 2;
+      font-size: 1.6rem;
+      transition: transform .4s var(--ease-bounce)
+    }
+
+    .cp-node:hover .cp-node-icon {
+      transform: scale(1.2)
+    }
+
+    .cp-node-num {
+      position: absolute;
+      bottom: -6px;
+      right: -2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--hot));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: .6rem;
+      font-weight: 700;
+      color: #fff;
+      z-index: 3;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .4)
+    }
+
+    .cp-content h4 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      transition: color .3s
+    }
+
+    .cp-step:hover .cp-content h4 {
+      color: var(--accent2)
+    }
+
+    .cp-content p {
+      color: var(--text-dim);
+      font-size: .88rem;
+      line-height: 1.65
+    }
+
+    .cp-detail {
+      opacity: 0;
+      transition: all .6s var(--ease) .25s
+    }
+
+    .cp-step.visible .cp-detail {
+      opacity: 1
+    }
+
+    .cp-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 60px;
+      font-size: .76rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      transition: all .3s
+    }
+
+    .cp-step:hover .cp-tag {
+      border-color: rgba(139, 92, 246, 0.3);
+      background: rgba(139, 92, 246, 0.06);
+      color: var(--accent2)
+    }
+
+    .cp-tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .cp-destination {
+      margin-top: 48px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px) scale(.92);
+      transition: all 1s var(--ease) .3s
+    }
+
+    .cp-destination.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1)
+    }
+
+    .cp-dest-card {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 44px 60px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(20, 184, 166, 0.06));
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: var(--radius-xl);
+      position: relative;
+      overflow: hidden
+    }
+
+    .cp-dest-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.12), transparent 60%)
+    }
+
+    .cp-dest-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), transparent 40%, transparent 60%, rgba(20, 184, 166, 0.15));
+      pointer-events: none
+    }
+
+    .cp-dest-icon {
+      font-size: 2.8rem;
+      animation: destFloat 2.5s ease-in-out infinite;
+      position: relative;
+      z-index: 2
+    }
+
+    @keyframes destFloat {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-10px)
+      }
+    }
+
+    .cp-dest-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent2), var(--teal2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      z-index: 2
+    }
+
+    .cp-dest-card p {
+      color: var(--text-dim);
+      font-size: .9rem;
+      position: relative;
+      z-index: 2
+    }
+
+    /* ============ BEFORE / AFTER ============ */
+    .ba-container {
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr;
+      gap: 0;
+      align-items: center;
+    }
+
+    .ba-card {
+      padding: 36px;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden
+    }
+
+    .ba-card.before {
+      background: rgba(239, 68, 68, 0.04);
+      border: 1px solid rgba(239, 68, 68, 0.12)
+    }
+
+    .ba-card.after {
+      background: rgba(20, 184, 166, 0.04);
+      border: 1px solid rgba(20, 184, 166, 0.12)
+    }
+
+    .ba-card h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin-bottom: 18px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .ba-card.before h3 {
+      color: #f87171
+    }
+
+    .ba-card.after h3 {
+      color: var(--teal2)
+    }
+
+    .ba-card ul {
+      list-style: none
+    }
+
+    .ba-card ul li {
+      padding: 10px 0;
+      padding-left: 26px;
+      position: relative;
+      font-size: .88rem;
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+      transition: all .3s;
+      line-height: 1.5
+    }
+
+    .ba-card:hover ul li {
+      transform: translateX(4px)
+    }
+
+    .ba-card.before ul li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #f87171;
+      font-weight: 700
+    }
+
+    .ba-card.after ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal2);
+      font-weight: 700
+    }
+
+    .ba-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: var(--accent2);
+      animation: arrowPulse 2s ease infinite
+    }
+
+    @keyframes arrowPulse {
+
+      0%,
+      100% {
+        opacity: .5;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.15)
+      }
+    }
+
+    /* ============ LINKEDIN ============ */
+    .linkedin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 52px;
+      align-items: center
+    }
+
+    .linkedin-visual {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .linkedin-visual::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0077B5, var(--accent), var(--teal))
+    }
+
+    .li-metric {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03)
+    }
+
+    .li-metric:last-child {
+      border-bottom: none
+    }
+
+    .li-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--surface);
+      border-radius: 4px;
+      overflow: hidden
+    }
+
+    .li-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0;
+      transition: width 1.5s var(--ease)
+    }
+
+    .li-metric.visible .li-bar-fill {
+      width: var(--fill)
+    }
+
+    .li-label {
+      font-size: .85rem;
+      color: var(--text-dim);
+      min-width: 130px
+    }
+
+    .li-val {
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      color: var(--accent2);
+      min-width: 60px;
+      text-align: right;
+      font-weight: 700
+    }
+
+    /* ============ STORIES ============ */
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px
+    }
+
+    .story-card {
+      overflow: hidden
+    }
+
+    .story-header {
+      padding: 24px 32px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.04));
+      border-bottom: 1px solid var(--glass-border)
+    }
+
+    .story-header .s-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem
+    }
+
+    .story-header .s-journey {
+      font-size: .8rem;
+      color: var(--accent2);
+      margin-top: 6px;
+      font-weight: 500
+    }
+
+    .story-body {
+      padding: 24px 32px
+    }
+
+    .story-body p {
+      font-size: .9rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 18px
+    }
+
+    .story-result {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(20, 184, 166, 0.08);
+      border: 1px solid rgba(20, 184, 166, 0.15);
+      border-radius: 60px;
+      font-size: .8rem;
+      color: var(--teal2);
+      font-weight: 600
+    }
+
+    /* ============ EXPERTISE ============ */
+    .expertise-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center
+    }
+
+    .expertise-tag {
+      padding: 12px 28px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 60px;
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      transition: all .4s var(--ease);
+      cursor: default;
+      position: relative;
+      overflow: hidden
+    }
+
+    .expertise-tag::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.06));
+      opacity: 0;
+      transition: opacity .3s
+    }
+
+    .expertise-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.12)
+    }
+
+    .expertise-tag:hover::before {
+      opacity: 1
+    }
+
+    /* ============ TOOLS ============ */
+    .tools-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center
+    }
+
+    .tool-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      font-size: .84rem;
+      color: var(--text-dim);
+      transition: all .3s
+    }
+
+    .tool-badge:hover {
+      border-color: rgba(139, 92, 246, 0.2);
+      transform: translateY(-2px)
+    }
+
+    .tool-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    /* ============ TESTIMONIALS ============ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px
+    }
+
+    .testimonial-card {
+      padding: 32px 36px;
+      position: relative
+    }
+
+    .testimonial-card .t-quote {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-size: 3rem;
+      line-height: 1;
+      color: rgba(139, 92, 246, 0.1);
+      font-family: Georgia, serif
+    }
+
+    .testimonial-card .stars {
+      color: var(--gold2);
+      font-size: .85rem;
+      margin-bottom: 16px;
+      letter-spacing: 3px
+    }
+
+    .testimonial-card .review {
+      font-size: .92rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 2
+    }
+
+    .testimonial-card .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .reviewer-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .85rem;
+      color: #fff;
+      flex-shrink: 0
+    }
+
+    .reviewer-info .r-name {
+      font-weight: 600;
+      font-size: .9rem
+    }
+
+    .reviewer-info .r-role {
+      font-size: .76rem;
+      color: var(--text-muted)
+    }
+
+    /* ============ FAQ ============ */
+    .faq-list {
+      max-width: 780px;
+      margin: 0 auto
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--glass-border);
+      transition: background .3s
+    }
+
+    .faq-item:hover {
+      background: var(--surface)
+    }
+
+    .faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: .98rem;
+      transition: color .3s
+    }
+
+    .faq-q:hover {
+      color: var(--accent2)
+    }
+
+    .faq-q .icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--accent2);
+      transition: all .4s var(--ease);
+      flex-shrink: 0
+    }
+
+    .faq-item.open .faq-q .icon {
+      transform: rotate(45deg);
+      background: var(--accent);
+      color: #fff
+    }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s var(--ease), padding .4s
+    }
+
+    .faq-item.open .faq-a {
+      max-height: 250px;
+      padding: 0 16px 22px
+    }
+
+    .faq-a p {
+      color: var(--text-dim);
+      font-size: .9rem;
+      line-height: 1.8
+    }
+
+    /* ============ CTA ============ */
+    .cta-section {
+      position: relative;
+      overflow: hidden
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 100px 40px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.06), rgba(20, 184, 166, 0.04));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden
+    }
+
+    .cta-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), transparent 40%, transparent 60%, rgba(236, 72, 153, 0.08));
+      pointer-events: none
+    }
+
+    .cta-inner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 900;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 2
+    }
+
+    .cta-inner p {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      margin-bottom: 36px;
+      position: relative;
+      z-index: 2;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2
+    }
+
+    .cta-floating-icons {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden
+    }
+
+    .cta-fi {
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: .08;
+      animation: ctaIconFloat 12s ease-in-out infinite
+    }
+
+    .cta-fi:nth-child(1) {
+      left: 10%;
+      top: 20%;
+      animation-delay: 0s
+    }
+
+    .cta-fi:nth-child(2) {
+      left: 85%;
+      top: 30%;
+      animation-delay: 2s
+    }
+
+    .cta-fi:nth-child(3) {
+      left: 20%;
+      bottom: 20%;
+      animation-delay: 4s
+    }
+
+    .cta-fi:nth-child(4) {
+      left: 75%;
+      bottom: 15%;
+      animation-delay: 1s
+    }
+
+    .cta-fi:nth-child(5) {
+      left: 50%;
+      top: 15%;
+      animation-delay: 3s
+    }
+
+    @keyframes ctaIconFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0)
+      }
+
+      25% {
+        transform: translateY(-15px) rotate(5deg)
+      }
+
+      75% {
+        transform: translateY(10px) rotate(-5deg)
+      }
+    }
+
+    /* ============ CONTACT ============ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 52px;
+      align-items: start
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .form-group label {
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: .3px
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 15px 18px;
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .92rem;
+      transition: all .3s;
+      outline: none
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+      background: var(--glass)
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 110px
+    }
+
+    .form-group select {
+      cursor: pointer
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 20px
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: start;
+      gap: 18px;
+      padding: 22px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      transition: all .3s
+    }
+
+    .contact-item:hover {
+      border-color: rgba(139, 92, 246, 0.2);
+      transform: translateX(4px)
+    }
+
+    .ci-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(236, 72, 153, 0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0
+    }
+
+    .contact-item h4 {
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: 4px
+    }
+
+    .contact-item p {
+      font-size: .84rem;
+      color: var(--text-dim);
+      line-height: 1.5
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: all .4s var(--ease);
+      border: none;
+      cursor: pointer;
+      font-size: .95rem;
+      box-shadow: 0 4px 16px rgba(37, 211, 102, 0.2)
+    }
+
+    .whatsapp-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(37, 211, 102, 0.3)
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--glass-border);
+      padding: 64px 0 28px
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 44px;
+      margin-bottom: 52px
+    }
+
+    .footer-brand .nav-logo {
+      margin-bottom: 14px;
+      font-size: 1.4rem
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: .84rem;
+      line-height: 1.7;
+      max-width: 280px
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .88rem;
+      margin-bottom: 18px;
+      color: var(--text)
+    }
+
+    .footer-col ul {
+      list-style: none
+    }
+
+    .footer-col ul li {
+      margin-bottom: 2px
+    }
+
+    .footer-col ul li a {
+      font-size: .84rem;
+      color: var(--text-muted);
+      display: inline-block;
+      padding: 5px 0;
+      transition: all .3s;
+      position: relative
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--accent2);
+      transform: translateX(4px)
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 28px;
+      border-top: 1px solid var(--glass-border);
+      font-size: .78rem;
+      color: var(--text-muted)
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media(max-width:1024px) {
+      .hero-visual {
+        display: none
+      }
+
+      .pricing-card.featured {
+        z-index: auto
+      }
+
+      .ba-container {
+        grid-template-columns: 1fr;
+        gap: 16px
+      }
+
+      .ba-arrow {
+        transform: rotate(90deg);
+        padding: 8px 0
+      }
+
+      .linkedin-grid {
+        grid-template-columns: 1fr
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .why-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:768px) {
+      .section {
+        padding: 80px 0
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(6, 6, 14, 0.97);
+        backdrop-filter: blur(24px);
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--glass-border);
+        gap: 16px
+      }
+
+      .nav-links.show {
+        display: flex !important
+      }
+
+      .mobile-toggle {
+        display: block
+      }
+
+      .hero-metrics {
+        grid-template-columns: 1fr;
+        gap: 12px
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px
+      }
+
+      .why-grid {
+        grid-template-columns: 1fr
+      }
+
+      .cp-step {
+        grid-template-columns: 56px 1fr !important;
+        min-height: auto;
+        padding-bottom: 28px
+      }
+
+      .cp-step:nth-child(odd) .cp-content,
+      .cp-step:nth-child(even) .cp-content {
+        grid-column: 2 !important;
+        text-align: left !important;
+        padding: 0 0 0 16px !important
+      }
+
+      .cp-step:nth-child(odd) .cp-detail,
+      .cp-step:nth-child(even) .cp-detail {
+        grid-column: 2 !important;
+        text-align: left !important;
+        padding: 4px 0 0 16px !important
+      }
+
+      .cp-step:nth-child(even) {
+        direction: ltr !important
+      }
+
+      .cp-node-wrap {
+        grid-column: 1 !important
+      }
+
+      .cp-line {
+        left: 28px;
+        bottom: 390px
+      }
+
+      .cp-node {
+        width: 52px;
+        height: 52px
+      }
+
+      .cp-node-ring,
+      .cp-node-ring-2 {
+        display: none
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr
+      }
+
+      .stories-grid {
+        grid-template-columns: 1fr
+      }
+
+      .candidates-grid {
+        grid-template-columns: 1fr
+      }
+
+      .cursor-dot,
+      .cursor-ring {
+        display: none !important
+      }
+    }
+
+    @media(max-width:480px) {
+      .hero h1 {
+        font-size: 2.2rem
+      }
+
+      .hero-actions {
+        flex-direction: column
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+        justify-content: center
+      }
+
+      .cta-inner {
+        padding: 60px 24px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PRELOADER -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-inner">
+      <div class="preloader-logo">J<span>Scale</span></div>
+      <div class="preloader-bar">
+        <div class="preloader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCROLL PROGRESS -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">J<em>Scale</em></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#companies">Results</a></li>
+        <li><a href="#process">How It Works</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li class="nav-cta"><a href="#contact" class="btn btn-primary btn-sm"><span>Get Started</span></a></li>
+      </ul>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-grid-bg"></div>
+    <div class="hero-visual">
+      <div class="hero-orb-container">
+        <div class="hero-orb"></div>
+        <div class="hero-rings"></div>
+        <div class="hero-rings"></div>
+        <div class="hero-rings"></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="pulse"></span> JScale Career Growth Engine</div>
+        <h1>From Résumé to<br><em><span class="highlight-text">Offer Letter</span></em></h1>
+        <p class="hero-sub">Not getting interview calls? Your résumé and job strategy matter more than you think.
+          <strong>We help you stand out, get noticed, and get hired</strong> — with precision job marketing and
+          end-to-end placement support.
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary btn-glow"><span>Get Started</span><span
+              class="btn-arrow">→</span></a>
+          <a href="#contact" class="btn btn-secondary">Book Free Consultation</a>
+        </div>
+        <div class="hero-metrics">
+          <div class="hero-metric">
+            <div class="hm-num" data-count="2500">0</div>
+            <div class="hm-label">Profiles Optimized</div>
+          </div>
+          <div class="hero-metric">
+            <div class="hm-num" data-count="1200">0</div>
+            <div class="hm-label">Interviews Generated</div>
+          </div>
+          <div class="hero-metric">
+            <div class="hm-num" data-count="94">0</div>
+            <div class="hm-label">Client Satisfaction %</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIBBON -->
+  <div class="ribbon">
+    <div class="ribbon-track">
+      <span class="ribbon-item"><span class="ri-dot"></span>Job Marketing</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--hot)"></span>ATS-Smart Résumé</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--teal)"></span>LinkedIn Optimization</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--gold)"></span>Certification
+        Fast-Track</span>
+      <span class="ribbon-item"><span class="ri-dot"></span>Assessment Preparation</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--hot)"></span>Live Project Assistance</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--teal)"></span>Interview Coaching</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--gold)"></span>Placement Support</span>
+      <span class="ribbon-item"><span class="ri-dot"></span>Job Marketing</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--hot)"></span>ATS-Smart Résumé</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--teal)"></span>LinkedIn Optimization</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--gold)"></span>Certification
+        Fast-Track</span>
+      <span class="ribbon-item"><span class="ri-dot"></span>Assessment Preparation</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--hot)"></span>Live Project Assistance</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--teal)"></span>Interview Coaching</span>
+      <span class="ribbon-item"><span class="ri-dot" style="background:var(--gold)"></span>Placement Support</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="mesh-gradient">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+    </div>
+    <div class="container" style="position:relative;z-index:2">
+      <div class="section-header reveal">
+        <span class="section-label">Our Services</span>
+        <h2 class="section-title">Comprehensive Career <span class="gradient-text">Acceleration</span></h2>
+        <p class="section-subtitle">Every service is designed to move you closer to your next offer — faster, smarter,
+          and with expert precision.</p>
+      </div>
+      <div class="services-grid">
+        <div class="glass-card service-card glow-border reveal stagger-1">
+          <div class="card-accent"></div>
+          <div class="card-glow"></div>
+          <div class="service-icon">🎯</div>
+          <h3>Precision Job Marketing</h3>
+          <ul>
+            <li>Strategic applications to roles that match your exact profile</li>
+            <li>Daily high-volume outreach with data-driven targeting</li>
+            <li>Focused recruiter engagement for maximum interview conversion</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary btn-sm">Explore →</a>
+        </div>
+        <div class="glass-card service-card glow-border reveal stagger-2">
+          <div class="card-accent"></div>
+          <div class="card-glow"></div>
+          <div class="service-icon">🛠️</div>
+          <h3>Live Project Assistance</h3>
+          <ul>
+            <li>Hands-on mentorship with real industry-grade projects</li>
+            <li>Build portfolio-ready work that impresses hiring managers</li>
+            <li>Domain-expert guidance across tech stacks</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary btn-sm">Explore →</a>
+        </div>
+        <div class="glass-card service-card glow-border reveal stagger-3">
+          <div class="card-accent"></div>
+          <div class="card-glow"></div>
+          <div class="service-icon">🏅</div>
+          <h3>Certification Fast-Track</h3>
+          <ul>
+            <li>Accelerated preparation to clear certifications in weeks</li>
+            <li>Career-focused roadmap aligned with in-demand credentials</li>
+            <li>Full practice tests and curated study resources</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary btn-sm">Explore →</a>
+        </div>
+        <div class="glass-card service-card glow-border reveal stagger-4">
+          <div class="card-accent"></div>
+          <div class="card-glow"></div>
+          <div class="service-icon">✅</div>
+          <h3>Clear My Assessment</h3>
+          <ul>
+            <li>Dedicated coaching for company-specific assessment rounds</li>
+            <li>Real scenario-based practice with timed drills</li>
+            <li>Technical and aptitude test preparation included</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary btn-sm">Explore →</a>
+        </div>
+        <div class="glass-card service-card glow-border reveal stagger-5">
+          <div class="card-accent"></div>
+          <div class="card-glow"></div>
+          <div class="service-icon">📄</div>
+          <h3>ATS-Smart Résumé</h3>
+          <ul>
+            <li>Engineered to pass automated screening systems</li>
+            <li>Recruiter-friendly layout with strategic keyword placement</li>
+            <li>Individually tailored for each role to maximize shortlisting</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary btn-sm">Explore →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section pricing-section" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Placement Tracks</span>
+        <h2 class="section-title">Invest in Your <span class="gradient-text">Future</span></h2>
+        <p class="section-subtitle">Transparent pricing. Results-driven placement. You pay a success fee only after you
+          land the job.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="glass-card pricing-card glow-border reveal stagger-1">
+          <div class="pricing-tier">Track 01</div>
+          <div class="pricing-name">Prime</div>
+          <div class="pricing-price"><span class="dollar">$</span>500</div>
+          <div class="pricing-desc">Structured placement track — we apply strategically until you get hired.</div>
+          <ul class="pricing-features">
+            <li>30 targeted job applications per day</li>
+            <li>Dedicated placement strategist</li>
+            <li>Résumé tailored per application</li>
+            <li>Weekly progress reports & insights</li>
+            <li>Success Fee: 11% after placement</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary"><span>Get Started</span></a>
+        </div>
+        <div class="glass-card pricing-card featured glow-border reveal stagger-2">
+          <div class="pricing-tier">Track 02</div>
+          <div class="pricing-name">Prime Plus</div>
+          <div class="pricing-price"><span class="dollar">$</span>1,000</div>
+          <div class="pricing-desc">Turbo Apply — double the volume, wider reach, more interview opportunities.</div>
+          <ul class="pricing-features">
+            <li>60 targeted job applications per day</li>
+            <li>Multi-platform reach & recruiter outreach</li>
+            <li>Full placement track support</li>
+            <li>Priority processing & fast turnaround</li>
+            <li>Success Fee: 11% after placement</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary"><span>Get Started</span><span class="btn-arrow">→</span></a>
+        </div>
+        <div class="glass-card pricing-card glow-border reveal stagger-3">
+          <div class="pricing-tier">Track 03</div>
+          <div class="pricing-name">Ultra Prime</div>
+          <div class="pricing-price"><span class="dollar">$</span>5,000</div>
+          <div class="pricing-desc">White-glove, end-to-end career transformation — from profile to offer letter.</div>
+          <ul class="pricing-features">
+            <li>Complete apply-to-offer support</li>
+            <li>Assessment & interview preparation</li>
+            <li>Full résumé + LinkedIn + strategy</li>
+            <li>Dedicated career strategist assigned</li>
+            <li>Success Fee: 11% after placement</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary"><span>Get Started</span></a>
+        </div>
+      </div>
+      <div class="success-note reveal">
+        <div class="success-note-inner"><span class="sn-icon">🛡️</span> All tracks include an <span>11% success
+            fee</span> — charged only after you receive an offer.</div>
+      </div>
+
+      <!-- APPLY ONLY CAMPAIGNS -->
+      <div class="campaigns-section">
+        <div class="campaigns-header reveal">
+          <h3>Apply Only — <span class="gradient-text">Campaigns</span></h3>
+          <p>No success fee. No assessments or proxy. Pure job application firepower.</p>
+        </div>
+        <div class="campaigns-grid">
+          <div class="glass-card campaign-card reveal stagger-1">
+            <div class="no-fee-badge">No success fee</div>
+            <div class="cc-header"><span class="cc-icon">📬</span><span class="cc-name">Apply Only 60</span></div>
+            <div class="cc-price">$350</div>
+            <div class="cc-desc">Campaign — 30 applications/day for 60 days. Maximum exposure, sustained effort.</div>
+            <ul class="cc-features">
+              <li>30 job applications per day</li>
+              <li>60-day campaign duration</li>
+              <li>No success fee — flat rate only</li>
+            </ul>
+            <a href="#contact" class="btn btn-secondary btn-sm"><span>Get Started</span></a>
+          </div>
+          <div class="glass-card campaign-card reveal stagger-2">
+            <div class="no-fee-badge">No success fee</div>
+            <div class="cc-header"><span class="cc-icon">📋</span><span class="cc-name">Apply Only 30</span></div>
+            <div class="cc-price">$200</div>
+            <div class="cc-desc">Campaign — 30 applications/day for 30 days. Quick burst to generate momentum.</div>
+            <ul class="cc-features">
+              <li>30 job applications per day</li>
+              <li>30-day campaign duration</li>
+              <li>No success fee — flat rate only</li>
+            </ul>
+            <a href="#contact" class="btn btn-secondary btn-sm"><span>Get Started</span></a>
+          </div>
+        </div>
+
+        <!-- ADD-ONS -->
+        <div class="addons-header reveal">
+          <h3><span class="gradient-text">Add-ons</span></h3>
+          <p>Standalone services you can purchase individually or combine with any track.</p>
+        </div>
+        <div class="addons-grid">
+          <div class="glass-card addon-card reveal stagger-1">
+            <div class="ao-header"><span class="ao-icon">📄</span><span class="ao-name">Resume Studio</span></div>
+            <div class="ao-price">$100 <span>one-time</span></div>
+            <div class="ao-desc">ATS-Smart résumé — built to pass recruiters & job portals on the first scan.</div>
+            <ul class="ao-features">
+              <li>ATS-friendly resume creation or revamp</li>
+              <li>Role-specific keywords & clean formatting</li>
+              <li>Ideal for freshers, switchers & experienced professionals</li>
+            </ul>
+          </div>
+          <div class="glass-card addon-card reveal stagger-2">
+            <div class="ao-header"><span class="ao-icon">💬</span><span class="ao-name">Career Coaching</span></div>
+            <div class="ao-price">$50 <span>per hour</span></div>
+            <div class="ao-desc">1:1 Expert — 60-minute session with a career specialist tailored to you.</div>
+            <ul class="ao-features">
+              <li>60-minute 1:1 session</li>
+              <li>Interview prep, strategy & feedback</li>
+              <li>Customized to your career goals</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">The JScale Advantage</span>
+        <h2 class="section-title">Why Professionals <span class="gradient-text">Choose Us</span></h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal stagger-1">
+          <div class="why-icon">🔄</div>
+          <h3>End-to-End Partnership</h3>
+          <p>From the first consultation to your offer letter — we walk with you through every step, removing guesswork
+            from your career journey.</p>
+        </div>
+        <div class="why-card reveal stagger-2">
+          <div class="why-icon">👨‍💼</div>
+          <h3>Industry Veterans</h3>
+          <p>Our team includes former recruiters, HR leaders, and tech professionals who understand exactly what hiring
+            managers are looking for.</p>
+        </div>
+        <div class="why-card reveal stagger-3">
+          <div class="why-icon">📈</div>
+          <h3>High Conversion Rate</h3>
+          <p>Our optimized application strategy delivers significantly more interview callbacks than traditional
+            job-hunting approaches.</p>
+        </div>
+        <div class="why-card reveal stagger-4">
+          <div class="why-icon">🧩</div>
+          <h3>Personalized Approach</h3>
+          <p>No two candidates are alike. Every strategy we build is custom-tailored to your experience, target roles,
+            and career goals.</p>
+        </div>
+        <div class="why-card reveal stagger-5">
+          <div class="why-icon">⚡</div>
+          <h3>Rapid Execution</h3>
+          <p>We move fast — daily applications, 48-hour résumé turnaround, and immediate placement efforts from day one.
+          </p>
+        </div>
+        <div class="why-card reveal stagger-6">
+          <div class="why-icon">🎯</div>
+          <h3>Aligned Incentives</h3>
+          <p>Our success fee model means we only profit when you do. Your placement is our priority — not just a
+            promise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPANIES -->
+  <section class="section" id="companies" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Proven Track Record</span>
+        <h2 class="section-title">Where Our Candidates <span class="gradient-text">Got Placed</span></h2>
+        <p class="section-subtitle">Our candidates have secured opportunities at some of the most respected companies
+          worldwide.</p>
+      </div>
+      <div class="logos-container reveal">
+        <div class="logos-track">
+          <div class="logo-chip">Google</div>
+          <div class="logo-chip">Amazon</div>
+          <div class="logo-chip">Microsoft</div>
+          <div class="logo-chip">Meta</div>
+          <div class="logo-chip">Deloitte</div>
+          <div class="logo-chip">Infosys</div>
+          <div class="logo-chip">TCS</div>
+          <div class="logo-chip">Wipro</div>
+          <div class="logo-chip">Accenture</div>
+          <div class="logo-chip">Cognizant</div>
+          <div class="logo-chip">HCL</div>
+          <div class="logo-chip">Capgemini</div>
+          <div class="logo-chip">Zoho</div>
+          <div class="logo-chip">Freshworks</div>
+          <div class="logo-chip">Google</div>
+          <div class="logo-chip">Amazon</div>
+          <div class="logo-chip">Microsoft</div>
+          <div class="logo-chip">Meta</div>
+          <div class="logo-chip">Deloitte</div>
+          <div class="logo-chip">Infosys</div>
+          <div class="logo-chip">TCS</div>
+          <div class="logo-chip">Wipro</div>
+          <div class="logo-chip">Accenture</div>
+          <div class="logo-chip">Cognizant</div>
+          <div class="logo-chip">HCL</div>
+          <div class="logo-chip">Capgemini</div>
+          <div class="logo-chip">Zoho</div>
+          <div class="logo-chip">Freshworks</div>
+        </div>
+      </div>
+      <div class="candidates-grid">
+        <div class="glass-card candidate-card reveal stagger-1">
+          <div class="c-header">
+            <div class="c-avatar" style="background:linear-gradient(135deg,var(--accent),var(--hot))">AK</div>
+            <div>
+              <div class="c-name">Aravind Krishnan</div>
+              <div class="c-role">Frontend Developer</div>
+            </div>
+          </div>
+          <div class="c-company">Placed at Infosys</div>
+          <div class="c-tags"><span>Job Marketing</span><span>ATS Résumé</span></div>
+          <div class="c-outcome">✦ Placed within 45 days</div>
+        </div>
+        <div class="glass-card candidate-card reveal stagger-2">
+          <div class="c-header">
+            <div class="c-avatar" style="background:linear-gradient(135deg,var(--teal),var(--blue))">MS</div>
+            <div>
+              <div class="c-name">Meenakshi Sundaram</div>
+              <div class="c-role">Data Analyst</div>
+            </div>
+          </div>
+          <div class="c-company">Placed at Deloitte</div>
+          <div class="c-tags"><span>Prime Plus Track</span><span>Assessment Support</span></div>
+          <div class="c-outcome">✦ Placed within 30 days</div>
+        </div>
+        <div class="glass-card candidate-card reveal stagger-3">
+          <div class="c-header">
+            <div class="c-avatar" style="background:linear-gradient(135deg,var(--gold),var(--hot))">HV</div>
+            <div>
+              <div class="c-name">Harish Venkatesh</div>
+              <div class="c-role">QA Engineer</div>
+            </div>
+          </div>
+          <div class="c-company">Placed at TCS</div>
+          <div class="c-tags"><span>Certification</span><span>Job Marketing</span><span>Résumé</span></div>
+          <div class="c-outcome">✦ Placed within 60 days</div>
+        </div>
+        <div class="glass-card candidate-card reveal stagger-4">
+          <div class="c-header">
+            <div class="c-avatar" style="background:linear-gradient(135deg,var(--hot),var(--accent))">DL</div>
+            <div>
+              <div class="c-name">Divya Lakshmi N.</div>
+              <div class="c-role">Backend Developer</div>
+            </div>
+          </div>
+          <div class="c-company">Placed at Zoho</div>
+          <div class="c-tags"><span>Ultra Prime Track</span></div>
+          <div class="c-outcome">✦ Placed within 21 days</div>
+        </div>
+        <div class="glass-card candidate-card reveal stagger-5">
+          <div class="c-header">
+            <div class="c-avatar" style="background:linear-gradient(135deg,var(--blue),var(--accent))">KR</div>
+            <div>
+              <div class="c-name">Karthik Rajan</div>
+              <div class="c-role">Cloud Engineer</div>
+            </div>
+          </div>
+          <div class="c-company">Placed at Amazon</div>
+          <div class="c-tags"><span>Prime Plus Track</span><span>Certification</span></div>
+          <div class="c-outcome">✦ Placed within 35 days</div>
+        </div>
+        <div class="glass-card candidate-card reveal stagger-6">
+          <div class="c-header">
+            <div class="c-avatar" style="background:linear-gradient(135deg,var(--teal),var(--accent))">PR</div>
+            <div>
+              <div class="c-name">Preethi Ramachandran</div>
+              <div class="c-role">Business Analyst</div>
+            </div>
+          </div>
+          <div class="c-company">Placed at Accenture</div>
+          <div class="c-tags"><span>Job Marketing</span><span>LinkedIn</span><span>Résumé</span></div>
+          <div class="c-outcome">✦ Placed within 28 days</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section stats-section" id="stats">
+    <div class="mesh-line" style="top:0"></div>
+    <div class="mesh-line" style="bottom:0"></div>
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal stagger-1">
+          <div class="stat-num" data-count="2500">0</div>
+          <div class="stat-label">Profiles Improved</div>
+          <div class="stat-bar">
+            <div class="stat-bar-fill" style="background:var(--accent)" data-width="92%"></div>
+          </div>
+        </div>
+        <div class="stat-item reveal stagger-2">
+          <div class="stat-num" data-count="1200">0</div>
+          <div class="stat-label">Interviews Generated</div>
+          <div class="stat-bar">
+            <div class="stat-bar-fill" style="background:var(--hot)" data-width="78%"></div>
+          </div>
+        </div>
+        <div class="stat-item reveal stagger-3">
+          <div class="stat-num" data-count="680">0</div>
+          <div class="stat-label">Placements Achieved</div>
+          <div class="stat-bar">
+            <div class="stat-bar-fill" style="background:var(--teal)" data-width="65%"></div>
+          </div>
+        </div>
+        <div class="stat-item reveal stagger-4">
+          <div class="stat-num" data-count="94">0</div>
+          <div class="stat-label">Client Satisfaction %</div>
+          <div class="stat-bar">
+            <div class="stat-bar-fill" style="background:var(--gold)" data-width="94%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAREER PATH -->
+  <section class="section" id="process">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Your Journey</span>
+        <h2 class="section-title">Your Career <span class="gradient-text">Path</span></h2>
+        <p class="section-subtitle">A proven step-by-step process that transforms job seekers into placed professionals.
+        </p>
+      </div>
+      <div class="career-path-wrapper">
+        <div class="cp-ambient">
+          <div class="glow glow-1"></div>
+          <div class="glow glow-2"></div>
+        </div>
+        <div class="cp-particles">
+          <div class="cp-particle"></div>
+          <div class="cp-particle"></div>
+          <div class="cp-particle"></div>
+          <div class="cp-particle"></div>
+          <div class="cp-particle"></div>
+          <div class="cp-particle"></div>
+        </div>
+        <div class="cp-line">
+          <div class="cp-line-bg"></div>
+          <div class="cp-line-fill" id="cpLineFill"></div>
+          <div class="cp-line-pulse"></div>
+        </div>
+        <div class="cp-steps">
+          <div class="cp-step" data-step="1">
+            <div class="cp-content">
+              <h4>Free Consultation</h4>
+              <p>A one-on-one strategy call to understand your career goals, experience level, and current challenges.
+              </p>
+            </div>
+            <div class="cp-node-wrap">
+              <div class="cp-node">
+                <div class="cp-node-bg"></div>
+                <div class="cp-node-ring"></div>
+                <div class="cp-node-ring-2"></div><span class="cp-node-icon">📞</span><span class="cp-node-num">1</span>
+              </div>
+            </div>
+            <div class="cp-detail"><span class="cp-tag"><span class="cp-tag-dot"
+                  style="background:var(--teal2)"></span>30-min call · No commitment</span></div>
+          </div>
+          <div class="cp-step" data-step="2">
+            <div class="cp-content">
+              <h4>Profile Deep-Dive</h4>
+              <p>Comprehensive audit of your résumé, LinkedIn profile, skills positioning, and job search strategy.</p>
+            </div>
+            <div class="cp-node-wrap">
+              <div class="cp-node">
+                <div class="cp-node-bg"></div>
+                <div class="cp-node-ring"></div>
+                <div class="cp-node-ring-2"></div><span class="cp-node-icon">🔍</span><span class="cp-node-num">2</span>
+              </div>
+            </div>
+            <div class="cp-detail"><span class="cp-tag"><span class="cp-tag-dot"
+                  style="background:var(--accent)"></span>Detailed audit report</span></div>
+          </div>
+          <div class="cp-step" data-step="3">
+            <div class="cp-content">
+              <h4>Résumé & LinkedIn Transformation</h4>
+              <p>ATS-optimized résumé creation with strategic keywords and a complete LinkedIn profile overhaul.</p>
+            </div>
+            <div class="cp-node-wrap">
+              <div class="cp-node">
+                <div class="cp-node-bg"></div>
+                <div class="cp-node-ring"></div>
+                <div class="cp-node-ring-2"></div><span class="cp-node-icon">✨</span><span class="cp-node-num">3</span>
+              </div>
+            </div>
+            <div class="cp-detail"><span class="cp-tag"><span class="cp-tag-dot"
+                  style="background:var(--hot)"></span>Tailored per application</span></div>
+          </div>
+          <div class="cp-step" data-step="4">
+            <div class="cp-content">
+              <h4>Daily Job Marketing</h4>
+              <p>30–60 targeted applications daily with optimized cover letters and strategic recruiter outreach.</p>
+            </div>
+            <div class="cp-node-wrap">
+              <div class="cp-node">
+                <div class="cp-node-bg"></div>
+                <div class="cp-node-ring"></div>
+                <div class="cp-node-ring-2"></div><span class="cp-node-icon">🚀</span><span class="cp-node-num">4</span>
+              </div>
+            </div>
+            <div class="cp-detail"><span class="cp-tag"><span class="cp-tag-dot"
+                  style="background:var(--gold)"></span>30–60 applications/day</span></div>
+          </div>
+          <div class="cp-step" data-step="5">
+            <div class="cp-content">
+              <h4>Interview & Placement</h4>
+              <p>Mock interviews, assessment coaching, salary negotiation — we support you until you sign the offer.</p>
+            </div>
+            <div class="cp-node-wrap">
+              <div class="cp-node">
+                <div class="cp-node-bg"></div>
+                <div class="cp-node-ring"></div>
+                <div class="cp-node-ring-2"></div><span class="cp-node-icon">🎯</span><span class="cp-node-num">5</span>
+              </div>
+            </div>
+            <div class="cp-detail"><span class="cp-tag"><span class="cp-tag-dot"
+                  style="background:var(--teal2)"></span>Until you're placed</span></div>
+          </div>
+        </div>
+        <div class="cp-destination" id="cpDest">
+          <div class="cp-dest-card">
+            <div class="cp-dest-icon">🏆</div>
+            <h3>Offer Letter Received!</h3>
+            <p>Your new chapter starts here.</p>
+            <a href="#contact" class="btn btn-primary btn-sm"
+              style="margin-top:12px;position:relative;z-index:2"><span>Start Your Journey</span><span
+                class="btn-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE / AFTER -->
+  <section class="section" id="transform" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">The Difference</span>
+        <h2 class="section-title">Before vs After <span class="gradient-text">JScale</span></h2>
+      </div>
+      <div class="ba-container reveal">
+        <div class="ba-card before">
+          <h3>⚠️ Before JScale</h3>
+          <ul>
+            <li>Generic one-size-fits-all résumé with no targeting</li>
+            <li>Zero or minimal interview callbacks</li>
+            <li>No ATS keyword optimization</li>
+            <li>Unfocused, scattershot job applications</li>
+            <li>Weak or incomplete LinkedIn presence</li>
+            <li>No career strategy or professional direction</li>
+          </ul>
+        </div>
+        <div class="ba-arrow">→</div>
+        <div class="ba-card after">
+          <h3>✅ After JScale</h3>
+          <ul>
+            <li>ATS-optimized résumé tailored per application</li>
+            <li>Multiple interview calls every week</li>
+            <li>Keyword-rich, recruiter-friendly formatting</li>
+            <li>Targeted daily applications to matching roles</li>
+            <li>Professional LinkedIn driving inbound interest</li>
+            <li>Clear roadmap with dedicated career support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINKEDIN -->
+  <section class="section" id="linkedin">
+    <div class="container">
+      <div class="linkedin-grid">
+        <div class="reveal-left">
+          <span class="section-label">LinkedIn Optimization</span>
+          <h2 class="section-title" style="margin-top:8px">Your LinkedIn, <span
+              class="gradient-text">Supercharged</span></h2>
+          <p class="section-subtitle" style="margin-top:18px;margin-bottom:28px">We transform your LinkedIn profile into
+            a recruiter magnet — optimized headline, compelling summary, keyword-rich experience sections, and an
+            engagement strategy that gets you found.</p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:14px">
+            <li style="display:flex;align-items:center;gap:12px;font-size:.92rem"><span
+                style="color:var(--teal2);font-size:1.1rem">✓</span> Headline & summary rewrite for target roles</li>
+            <li style="display:flex;align-items:center;gap:12px;font-size:.92rem"><span
+                style="color:var(--teal2);font-size:1.1rem">✓</span> Skills & endorsements optimization</li>
+            <li style="display:flex;align-items:center;gap:12px;font-size:.92rem"><span
+                style="color:var(--teal2);font-size:1.1rem">✓</span> Keyword strategy for LinkedIn search visibility
+            </li>
+            <li style="display:flex;align-items:center;gap:12px;font-size:.92rem"><span
+                style="color:var(--teal2);font-size:1.1rem">✓</span> Content & engagement tips for recruiter attention
+            </li>
+          </ul>
+        </div>
+        <div class="linkedin-visual reveal-right">
+          <h4 style="font-family:var(--font-display);margin-bottom:22px;font-size:1rem;font-weight:700">Typical Client
+            Improvement</h4>
+          <div class="li-metric" data-fill="85"><span class="li-label">Profile Views</span>
+            <div class="li-bar">
+              <div class="li-bar-fill" style="--fill:85%;background:linear-gradient(90deg,var(--accent),var(--hot))">
+              </div>
+            </div><span class="li-val">+340%</span>
+          </div>
+          <div class="li-metric" data-fill="72"><span class="li-label">Search Appearances</span>
+            <div class="li-bar">
+              <div class="li-bar-fill" style="--fill:72%;background:linear-gradient(90deg,var(--accent),var(--teal))">
+              </div>
+            </div><span class="li-val">+280%</span>
+          </div>
+          <div class="li-metric" data-fill="65"><span class="li-label">Recruiter Messages</span>
+            <div class="li-bar">
+              <div class="li-bar-fill" style="--fill:65%;background:linear-gradient(90deg,var(--teal),var(--gold))">
+              </div>
+            </div><span class="li-val">+200%</span>
+          </div>
+          <div class="li-metric" data-fill="90"><span class="li-label">Connection Rate</span>
+            <div class="li-bar">
+              <div class="li-bar-fill" style="--fill:90%;background:linear-gradient(90deg,var(--gold),var(--hot))">
+              </div>
+            </div><span class="li-val">+420%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORIES -->
+  <section class="section" style="background:var(--bg2)" id="stories">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Success Stories</span>
+        <h2 class="section-title">Real <span class="gradient-text">Transformations</span></h2>
+      </div>
+      <div class="stories-grid">
+        <div class="glass-card story-card glow-border reveal stagger-1">
+          <div class="story-header">
+            <div class="s-name">Aravind K. — 0 Callbacks to 8 Interviews</div>
+            <div class="s-journey">Career Changer → Software Developer</div>
+          </div>
+          <div class="story-body">
+            <p>After months of silence, Aravind from Chennai enrolled in Prime Plus. Within 3 weeks, his optimized
+              résumé and targeted applications generated 8 interview calls — and a full-time offer.</p>
+            <div class="story-result">✦ Placed as Full-Stack Developer at Wipro</div>
+          </div>
+        </div>
+        <div class="glass-card story-card glow-border reveal stagger-2">
+          <div class="story-header">
+            <div class="s-name">Revathi M. — Fresher to Employed in 30 Days</div>
+            <div class="s-journey">Recent Graduate → Data Analyst</div>
+          </div>
+          <div class="story-body">
+            <p>A fresh graduate from Bangalore with no experience, Revathi used our certification fast-track and job
+              marketing. With daily applications and assessment coaching, she had an offer in one month.</p>
+            <div class="story-result">✦ Placed at Deloitte as Data Analyst</div>
+          </div>
+        </div>
+        <div class="glass-card story-card glow-border reveal stagger-3">
+          <div class="story-header">
+            <div class="s-name">Suresh N. — LinkedIn Visibility Breakthrough</div>
+            <div class="s-journey">Mid-Level Engineer → Senior Role</div>
+          </div>
+          <div class="story-body">
+            <p>After our LinkedIn overhaul, Suresh from Hyderabad saw 5x profile views and weekly recruiter messages —
+              leading to multiple competing offers and a 40% salary increase.</p>
+            <div class="story-result">✦ Senior Engineer at Cognizant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERTISE -->
+  <section class="section" id="expertise">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Domains We Cover</span>
+        <h2 class="section-title">Our <span class="gradient-text">Expertise Areas</span></h2>
+      </div>
+      <div class="expertise-tags reveal">
+        <span class="expertise-tag">Frontend Development</span><span class="expertise-tag">Backend Development</span>
+        <span class="expertise-tag">Full-Stack</span><span class="expertise-tag">Data Science</span>
+        <span class="expertise-tag">Data Analytics</span><span class="expertise-tag">Machine Learning & AI</span>
+        <span class="expertise-tag">Cloud & DevOps</span><span class="expertise-tag">QA & Automation</span>
+        <span class="expertise-tag">Mobile Development</span><span class="expertise-tag">UI/UX Design</span>
+        <span class="expertise-tag">Cybersecurity</span><span class="expertise-tag">Project Management</span>
+        <span class="expertise-tag">Business Analysis</span><span class="expertise-tag">SAP & ERP</span>
+        <span class="expertise-tag">Salesforce</span><span class="expertise-tag">Database Administration</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="section" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Our Toolkit</span>
+        <h2 class="section-title">Tools & Platforms <span class="gradient-text">We Leverage</span></h2>
+      </div>
+      <div class="tools-grid reveal">
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--accent)"></span>ATS Optimization Engines
+        </div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--hot)"></span>LinkedIn Recruiter Insights
+        </div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--teal)"></span>Job Board Aggregators</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--gold)"></span>Résumé Parsing Tools</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--accent2)"></span>Keyword Analysis
+          Platforms</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--hot2)"></span>Application Tracking
+          Systems</div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--teal2)"></span>Interview Prep Suites
+        </div>
+        <div class="tool-badge"><span class="tool-dot" style="background:var(--gold2)"></span>Assessment Simulators
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="testimonials">
+    <div class="mesh-gradient">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="container" style="position:relative;z-index:2">
+      <div class="section-header reveal">
+        <span class="section-label">Client Reviews</span>
+        <h2 class="section-title">What Our Clients <span class="gradient-text">Say About Us</span></h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="glass-card testimonial-card reveal stagger-1">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">I struggled to get interview calls for months. JScale optimized my résumé and started
+            applying strategically — within 3 weeks I had 5 interviews lined up. Exceptional service.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--accent),var(--hot))">SK</div>
+            <div class="reviewer-info">
+              <div class="r-name">Sathish Kumar R.</div>
+              <div class="r-role">Software Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-2">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">The LinkedIn optimization was a game changer. My profile views went up 5x and I started
+            getting recruiter messages every week. Highly recommend their LinkedIn service.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--teal),var(--blue))">LN</div>
+            <div class="reviewer-info">
+              <div class="r-name">Lavanya Nair</div>
+              <div class="r-role">Data Analyst</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-3">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">As a fresher, I had no idea how to approach the job market. JScale gave me a clear
+            strategy, polished my profile, and I got placed within a month. Incredible support throughout.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--gold),var(--hot))">MV</div>
+            <div class="reviewer-info">
+              <div class="r-name">Manikandan V.</div>
+              <div class="r-role">QA Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-4">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">The assessment preparation was exactly what I needed. I cleared two technical rounds that
+            I would have failed otherwise. Their coaching made a real difference.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--hot),var(--accent))">SP</div>
+            <div class="reviewer-info">
+              <div class="r-name">Swathi Pillai</div>
+              <div class="r-role">Backend Developer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-5">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">I went from zero responses to multiple offers in under 2 months. The targeted job
+            marketing approach is remarkably effective. Worth every rupee.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--blue),var(--accent))">GS</div>
+            <div class="reviewer-info">
+              <div class="r-name">Ganesh Subramanian</div>
+              <div class="r-role">Full-Stack Developer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-6">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">The résumé they crafted was leagues ahead of what I had. Professional, clean, and
+            ATS-optimized. Started getting callbacks almost immediately after we launched.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--accent),var(--teal))">AR</div>
+            <div class="reviewer-info">
+              <div class="r-name">Anitha Reddy</div>
+              <div class="r-role">Business Analyst</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-7">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">The Prime Plus track exceeded my expectations. 60 applications a day with truly
+            personalized support — I got placed faster than I thought possible.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--teal),var(--gold))">PM</div>
+            <div class="reviewer-info">
+              <div class="r-name">Prashanth Murthy</div>
+              <div class="r-role">Cloud Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card reveal stagger-8">
+          <div class="t-quote">"</div>
+          <div class="stars">★★★★★</div>
+          <div class="review">Their certification fast-track helped me clear AWS Solutions Architect in 3 weeks.
+            Combined with their job marketing, I had an offer within a month.</div>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,var(--gold),var(--accent))">VS</div>
+            <div class="reviewer-info">
+              <div class="r-name">Vijayalakshmi S.</div>
+              <div class="r-role">DevOps Engineer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Got Questions?</span>
+        <h2 class="section-title">Frequently <span class="gradient-text">Asked</span></h2>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <div class="faq-q">What is job marketing?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Job marketing is a strategic, proactive approach to career advancement. Rather than passive job
+              searching, we actively market your professional profile — applying to targeted roles daily with optimized
+              résumés, recruiter outreach, and data-driven targeting to maximize interview conversion.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do you guarantee placement?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>While we cannot guarantee placement as hiring decisions involve multiple factors, our structured
+              approach, daily high-volume applications, and optimization significantly increase your chances. Our
+              success-fee model means we're financially invested in your placement — our incentives are fully aligned
+              with yours.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">How many applications per day?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>It depends on your track: Prime includes 30 targeted applications daily, Prime Plus doubles that to 60
+              per day, and Ultra Prime includes comprehensive, white-glove application support tailored to your specific
+              needs and target roles.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do you help with LinkedIn optimization?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Absolutely. We provide a complete LinkedIn transformation including headline rewriting, summary
+              enhancement, keyword optimization, skills strategy, and engagement coaching — all designed to increase
+              your visibility to recruiters and drive inbound opportunities.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Is each résumé customized for every application?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Yes. We tailor your résumé for each application, aligning keywords and phrasing with the specific job
+              description's requirements. This maximizes your chances of passing ATS screening and standing out to
+              hiring managers.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can freshers and entry-level candidates apply?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Absolutely. We work with candidates at all experience levels — from fresh graduates to senior
+              professionals. For freshers, we focus on building strong profiles, gaining relevant certifications, and
+              positioning you effectively for entry-level opportunities.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What exactly is the success fee?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>The success fee is 11% of your first year's annual CTC, charged only after you receive and accept an
+              offer. This model aligns our interests with yours — we only earn when you succeed, ensuring our full
+              commitment to your placement.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do you provide interview coaching?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Yes. We offer comprehensive interview preparation including mock interview sessions, common question
+              coaching, technical round preparation, behavioral question strategy, and tips for clearing assessment
+              rounds with confidence.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What is the difference between Apply Only and Placement Tracks?<span class="icon">+</span>
+          </div>
+          <div class="faq-a">
+            <p>Apply Only campaigns are flat-rate — we apply to jobs on your behalf for a fixed period (30 or 60 days)
+              with no success fee. Placement Tracks are comprehensive packages that include résumé optimization,
+              LinkedIn overhaul, daily applications, interview support, and a dedicated strategist, with an 11% success
+              fee charged only after you get placed.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What job portals and platforms do you apply on?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>We apply across all major platforms including LinkedIn, Indeed, Glassdoor, Naukri, Monster, Dice,
+              ZipRecruiter, and company career pages directly. We also leverage recruiter networks and referral channels
+              for wider reach.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">How soon can I expect interview calls after signing up?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Most clients begin receiving interview callbacks within 2–3 weeks of starting their placement track. The
+              timeline varies based on your experience level, target roles, and market demand, but our optimized
+              approach significantly shortens the typical job search cycle.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do you work with international candidates or only India-based?<span class="icon">+</span>
+          </div>
+          <div class="faq-a">
+            <p>We serve candidates globally. Our strongest placement networks are in India, the United States, and
+              Middle East markets, but we support professionals targeting roles in any geography.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I upgrade from one track to another mid-way?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Yes, you can upgrade your track at any point. For example, if you start with Prime and want to switch to
+              Prime Plus for faster results, we'll adjust your plan and billing accordingly. Reach out to your
+              strategist or our support team to arrange an upgrade.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What is included in the Resume Studio add-on?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Resume Studio is a one-time $100 service where we build or completely revamp your résumé from scratch. It
+              includes ATS-friendly formatting, role-specific keyword optimization, clean professional layout, and is
+              suitable for freshers, career switchers, and experienced professionals alike.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">How does Career Coaching work?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Career Coaching is a $50/hour 1:1 session with a career specialist. Sessions are 60 minutes and can cover
+              interview preparation, career strategy, salary negotiation, profile review, or any career-related guidance
+              tailored to your goals. You can book as many sessions as you need.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What happens if I don't get placed?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>For Placement Tracks (Prime, Prime Plus, Ultra Prime), there is no success fee if you don't get placed —
+              you only pay the upfront track fee. For Apply Only campaigns, you pay the flat rate regardless of outcome.
+              We are committed to your success and continuously optimize our strategy throughout the engagement.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do you help with H1B or visa-sponsored roles?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Yes, we can target visa-sponsored roles as part of your job marketing strategy. We'll filter and apply to
+              companies that are known to sponsor work visas. However, visa approval is subject to employer and
+              government processes beyond our control.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">How do I get started?<span class="icon">+</span></div>
+          <div class="faq-a">
+            <p>Simply click "Get Started" or "Book Free Consultation" on this page, or reach out to us on WhatsApp at
+              +91 82336 33213. We'll schedule a free 30-minute call to understand your goals, recommend the right track,
+              and get you onboarded within 24 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-inner reveal-scale">
+        <div class="cta-floating-icons"><span class="cta-fi">📄</span><span class="cta-fi">💼</span><span
+            class="cta-fi">🎯</span><span class="cta-fi">🏆</span><span class="cta-fi">🚀</span></div>
+        <span class="section-label" style="justify-content:center">Take the First Step</span>
+        <h2>Ready to Get Your <span class="gradient-text">Offer Letter?</span></h2>
+        <p>Stop waiting for opportunities. Start creating them. Begin your career transformation with JScale today.</p>
+        <div class="cta-actions">
+          <a href="#contact" class="btn btn-primary btn-glow"><span>Start Now</span><span class="btn-arrow">→</span></a>
+          <a href="#contact" class="btn btn-secondary">Book a Free Call</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact" style="background:var(--bg2)">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Let's Talk</span>
+        <h2 class="section-title">Get in <span class="gradient-text">Touch</span></h2>
+        <p class="section-subtitle">Ready to accelerate your career? Reach out and we'll build your personalized
+          strategy.</p>
+      </div>
+      <div class="contact-grid reveal">
+        <form class="contact-form"
+          onsubmit="event.preventDefault();this.querySelector('button[type=submit]').textContent='✓ Sent!';setTimeout(()=>this.reset(),2000)">
+          <div class="form-row">
+            <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your full name" required>
+            </div>
+            <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@email.com"
+                required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"></div>
+            <div class="form-group"><label>Service Interested In</label><select>
+                <option>Select a service...</option>
+                <option>Precision Job Marketing</option>
+                <option>ATS-Smart Résumé</option>
+                <option>LinkedIn Optimization</option>
+                <option>Certification Fast-Track</option>
+                <option>Assessment Support</option>
+                <option>Prime Track ($500)</option>
+                <option>Prime Plus Track ($1,000)</option>
+                <option>Ultra Prime Track ($5,000)</option>
+                <option>Apply Only 60 ($350)</option>
+                <option>Apply Only 30 ($200)</option>
+                <option>Resume Studio ($100)</option>
+                <option>Career Coaching ($50/hr)</option>
+              </select></div>
+          </div>
+          <div class="form-group"><label>Tell Us About Your Situation</label><textarea
+              placeholder="Current role, years of experience, target roles, challenges you're facing..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%"><span>Submit Inquiry</span><span
+              class="btn-arrow">→</span></button>
+        </form>
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="ci-icon">📧</div>
+            <div>
+              <h4>Email Us</h4>
+              <p>support@jscale.com</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">📞</div>
+            <div>
+              <h4>Call Us</h4>
+              <p>+91 82336 33213</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">🕒</div>
+            <div>
+              <h4>Working Hours</h4>
+              <p>Monday – Saturday, 9 AM – 8 PM (EST)</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">📍</div>
+            <div>
+              <h4>Our Reach</h4>
+              <p>Serving candidates globally, with a focus on India, US, and Middle East markets.</p>
+            </div>
+          </div>
+          <button class="whatsapp-btn" onclick="window.open('https://wa.me/918233633213','_blank')">💬 Chat on
+            WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">J<em>Scale</em></div>
+          <p>Your end-to-end career growth partner — from résumé optimization to offer letter. Strategic job marketing,
+            profile transformation, and placement support for professionals at every level.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">Job Marketing</a></li>
+            <li><a href="#services">ATS-Smart Résumé</a></li>
+            <li><a href="#services">LinkedIn Optimization</a></li>
+            <li><a href="#services">Certification Fast-Track</a></li>
+            <li><a href="#services">Assessment Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#why">About Us</a></li>
+            <li><a href="#companies">Results</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="#contact">Get in Touch</a></li>
+            <li><a href="mailto:support@jscale.com">support@jscale.com</a></li>
+            <li><a href="tel:+918233633213">+91 82336 33213</a></li>
+            <li><a href="#">WhatsApp</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">© 2026 JScale Marketing Service. All rights reserved. Placeholder data used where real
+        data is not yet available.</div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== PRELOADER =====
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('preloader').classList.add('done'), 1600) });
+
+    // ===== SCROLL PROGRESS =====
+    const scrollBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => { const h = document.documentElement; const pct = h.scrollTop / (h.scrollHeight - h.clientHeight); scrollBar.style.transform = `scaleX(${pct})` });
+
+    // ===== CUSTOM CURSOR =====
+    const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx - 4 + 'px'; dot.style.top = my - 4 + 'px' });
+    function animateCursor() { rx += (mx - rx) * .15; ry += (my - ry) * .15; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animateCursor) }
+    animateCursor();
+    document.querySelectorAll('a,.btn,button,.faq-q,.expertise-tag,.cp-node').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('hover')); el.addEventListener('mouseleave', () => ring.classList.remove('hover')) });
+
+    // ===== NAV =====
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+    document.getElementById('mobileToggle').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('show'));
+
+    // ===== SMOOTH SCROLL =====
+    document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', function (e) { const id = this.getAttribute('href'); if (id === '#') return; const t = document.querySelector(id); if (t) { e.preventDefault(); const offset = nav.offsetHeight + 20; window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' }); document.getElementById('navLinks').classList.remove('show') } }) });
+
+    // ===== REVEAL ON SCROLL =====
+    const revealObs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target) } }) }, { threshold: .1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => revealObs.observe(el));
+
+    // ===== HERO PARTICLE CANVAS =====
+    (function () {
+      const c = document.getElementById('heroCanvas'); if (!c) return; const ctx = c.getContext('2d'); let w, h, particles = [];
+      function resize() { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight }
+      resize(); window.addEventListener('resize', resize);
+      for (let i = 0; i < 80; i++)particles.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.5 + .5, vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3, a: Math.random() * .3 + .1 });
+      function draw() {
+        ctx.clearRect(0, 0, w, h); particles.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0) p.x = w; if (p.x > w) p.x = 0; if (p.y < 0) p.y = h; if (p.y > h) p.y = 0; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(139,92,246,${p.a})`; ctx.fill() });
+        // connections
+        for (let i = 0; i < particles.length; i++)for (let j = i + 1; j < particles.length; j++) { const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, d = Math.sqrt(dx * dx + dy * dy); if (d < 120) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(139,92,246,${.06 * (1 - d / 120)})`; ctx.stroke() } }
+        requestAnimationFrame(draw)
+      } draw()
+    })();
+
+    // ===== ANIMATED COUNTERS =====
+    function animateCounters(container) {
+      container.querySelectorAll('[data-count]').forEach(el => {
+        const target = +el.dataset.count, dur = 2200, start = performance.now(); const isP = el.closest('.hero-metric,.stat-item')?.textContent.includes('%');
+        function tick(now) { const p = Math.min((now - start) / dur, 1), e = 1 - Math.pow(1 - p, 4); el.textContent = Math.round(e * target).toLocaleString() + (isP ? '%' : '+'); if (p < 1) requestAnimationFrame(tick) } requestAnimationFrame(tick)
+      })
+    }
+    // Hero counters
+    const heroObs = new IntersectionObserver(e => { if (e[0].isIntersecting) { animateCounters(document.querySelector('.hero-metrics')); heroObs.disconnect() } }, { threshold: .3 });
+    heroObs.observe(document.querySelector('.hero-metrics'));
+    // Stats counters
+    const statsObs = new IntersectionObserver(e => { if (e[0].isIntersecting) { animateCounters(document.getElementById('stats')); document.querySelectorAll('.stat-bar-fill').forEach(b => { b.style.width = b.dataset.width }); statsObs.disconnect() } }, { threshold: .3 });
+    statsObs.observe(document.getElementById('stats'));
+
+    // ===== CAREER PATH =====
+    (function () {
+      const steps = document.querySelectorAll('.cp-step'), line = document.getElementById('cpLineFill'), dest = document.getElementById('cpDest'); if (!steps.length) return; let revealed = 0; const total = steps.length;
+      const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { const s = e.target, i = +s.dataset.step; setTimeout(() => { s.classList.add('visible'); revealed = Math.max(revealed, i); if (line) { line.style.height = (revealed / total * 100) + '%'; line.classList.add('animated') } }, i * 220); obs.unobserve(s) } }) }, { threshold: .15, rootMargin: '0px 0px -50px 0px' });
+      steps.forEach(s => obs.observe(s));
+      if (dest) { const dObs = new IntersectionObserver(e => { if (e[0].isIntersecting) { dest.classList.add('visible'); dObs.disconnect() } }, { threshold: .3 }); dObs.observe(dest) }
+    })();
+
+    // ===== LINKEDIN BARS =====
+    const liObs = new IntersectionObserver(e => { if (e[0].isIntersecting) { document.querySelectorAll('.li-metric').forEach(m => { m.classList.add('visible') }); liObs.disconnect() } }, { threshold: .3 });
+    const liVis = document.querySelector('.linkedin-visual'); if (liVis) liObs.observe(liVis);
+
+    // ===== FAQ =====
+    document.querySelectorAll('.faq-q').forEach(q => q.addEventListener('click', function () { this.parentElement.classList.toggle('open') }));
+
+    // ===== CARD GLOW FOLLOW =====
+    document.querySelectorAll('.service-card').forEach(card => { card.addEventListener('mousemove', e => { const r = card.getBoundingClientRect(); card.style.setProperty('--glow-x', ((e.clientX - r.left) / r.width * 100) + '%'); card.style.setProperty('--glow-y', ((e.clientY - r.top) / r.height * 100) + '%') }) });
+  </script>
+</body>
+
+</html>
