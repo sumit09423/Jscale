@@ -363,7 +363,9 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(3, 19, 38, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   cursor: pointer;
 }
 
@@ -371,14 +373,29 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: min(320px, 88vw);
+  left: auto;
+  width: min(380px, 92vw);
+  max-width: 100%;
   height: 100%;
+  overflow-x: hidden;
   overflow-y: auto;
-  background: #141417;
-  color: #ffffff;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(3, 19, 38, 0.14) 100%
+  );
+  backdrop-filter: blur(32px) saturate(210%);
+  -webkit-backdrop-filter: blur(32px) saturate(210%);
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    -12px 0 40px rgba(0, 0, 0, 0.12),
+    inset 1px 0 0 rgba(255, 255, 255, 0.18);
+  color: var(--title-color);
   padding-bottom: 36px;
   transform: translateX(100%);
   transition: transform 700ms ease;
+  isolation: isolate;
 }
 
 .mobileMenuOpen .mobilePanel {
@@ -387,47 +404,52 @@
 
 .closeMenu {
   position: absolute;
-  top: 12px;
-  right: 18px;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(3, 19, 38, 0.1);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--title-color);
   cursor: pointer;
 }
 
 .mobileLogo {
   display: block;
-  padding: 48px 25px 84px;
+  padding: 56px 24px 24px;
 }
 
 .mobileLogo img {
-  width: 160px;
+  width: auto;
 }
 
 .mobileLogo .brandLogo {
-  color: #ffffff;
-  font-size: 34px;
+  display: block;
+  height: 48px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
 }
 
 .mobileNavGroup {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(3, 19, 38, 0.08);
 }
 
 .mobileNavGroup:last-child {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(3, 19, 38, 0.08);
 }
 
 .mobileNavGroup a {
   position: relative;
   display: block;
-  padding: 10px 25px;
-  color: #ffffff;
+  padding: 12px 24px;
+  color: var(--title-color);
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 24px;
   text-transform: uppercase;
 }
@@ -436,40 +458,52 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 5px;
+  width: 4px;
   height: 0;
-  background: #ffffff;
+  background: var(--theme-color);
   content: "";
   transition: height 500ms ease;
 }
 
-.mobileNavGroup a:hover::before {
+.mobileNavGroup a:hover,
+.mobileNavGroup a:focus-visible {
+  color: var(--theme-color);
+}
+
+.mobileNavGroup a:hover::before,
+.mobileNavGroup a:focus-visible::before {
   height: 100%;
 }
 
 .mobileChildLink {
-  margin-left: 20px;
-  font-size: 15px;
-  text-transform: capitalize;
+  margin-left: 12px;
+  padding-left: 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-transform: capitalize !important;
 }
 
 .mobileContact {
-  padding: 90px 30px 20px;
+  padding: 32px 24px 20px;
 }
 
 .mobileContact h4 {
-  margin-bottom: 18px;
-  color: #ffffff;
-  font-size: 20px;
+  margin-bottom: 12px;
+  color: var(--title-color);
+  font-size: 18px;
   font-weight: 700;
 }
 
 .mobileContact p,
 .mobileContact a {
   display: block;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-color);
   font-size: 15px;
   line-height: 26px;
+}
+
+.mobileContact a:hover {
+  color: var(--theme-color);
 }
 
 .heroSection {
@@ -1558,14 +1592,67 @@
 
   .subscribeInner h2 {
     margin-bottom: 30px;
+    font-size: 30px;
+    line-height: 38px;
+    text-align: center;
   }
 
   .subscribeForm {
     width: 100%;
   }
 
+  .subscribeForm input {
+    padding-right: 30px;
+  }
+
+  .subscribeForm button {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 12px;
+  }
+
   .footerWidgets {
-    padding-bottom: 70px;
+    padding: 50px 0 60px;
+  }
+
+  .footerBrand {
+    text-align: center;
+  }
+
+  .footerBrand a {
+    display: inline-block;
+  }
+
+  .footerBrand .brandLogo {
+    height: 84px;
+    max-width: min(280px, 78vw);
+    margin-inline: auto;
+  }
+
+  .footerBrand p {
+    margin-inline: auto;
+  }
+
+  .flagGrid {
+    margin-inline: auto;
+    grid-template-columns: repeat(4, 36px);
+    gap: 10px;
+  }
+
+  .flagGrid img {
+    width: 36px;
+    height: 36px;
+    max-width: 36px;
+  }
+
+  .footerLinks {
+    text-align: center;
+  }
+
+  .footerLinks a {
+    line-height: 36px;
   }
 
   .footerBottomInner {
@@ -1605,9 +1692,55 @@
     min-width: 0;
   }
 
-  .logoBox img {
+  .logoBox img,
+  .logoBox .brandLogo {
     height: 48px;
     max-width: min(180px, calc(100vw - 105px));
+  }
+
+  .mobileLogo .brandLogo {
+    height: 44px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+  }
+
+  .subscribeSection {
+    padding: 50px 0;
+  }
+
+  .subscribeInner {
+    padding: 28px 20px;
+  }
+
+  .subscribeInner h2 {
+    font-size: 26px;
+    line-height: 34px;
+  }
+
+  .footerBrand .brandLogo {
+    height: 72px;
+    max-width: min(240px, 72vw);
+  }
+
+  .flagGrid {
+    grid-template-columns: repeat(4, 32px);
+    gap: 8px;
+  }
+
+  .flagGrid img {
+    width: 32px;
+    height: 32px;
+    max-width: 32px;
+  }
+
+  .footerWidgets {
+    padding: 40px 0 50px;
+  }
+
+  .footerBrand h4,
+  .footerLinks h4 {
+    font-size: 18px;
   }
 
   .mobileToggle {
@@ -1620,6 +1753,28 @@
     flex: 0 0 50px;
     margin-left: auto;
     transform: none;
+  }
+
+  .mobilePanel {
+    top: 12px;
+    right: 12px;
+    width: calc(100vw - 24px);
+    max-width: none;
+    height: calc(100dvh - 24px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 20px;
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .mobileLogo {
+    padding-top: 52px;
+  }
+
+  .mobileLogo .brandLogo {
+    height: 44px;
+    max-width: min(200px, 62vw);
   }
 
   .autoContainer {
