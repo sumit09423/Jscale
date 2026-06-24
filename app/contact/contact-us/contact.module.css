@@ -1,0 +1,384 @@
+.contactPage [data-contact-reveal] {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 760ms ease,
+    transform 760ms ease,
+    box-shadow 500ms ease,
+    border-color 500ms ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.contactPage [data-contact-reveal][data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contactSection {
+  position: relative;
+  padding: 110px 0 30px;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 0.92fr 1.85fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.infoBox,
+.formInner {
+  position: relative;
+  min-height: 100%;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 10px 50px rgba(16, 36, 83, 0.08);
+}
+
+.infoBox {
+  padding: 40px 35px 12px;
+}
+
+.infoBox h3 {
+  margin-bottom: 30px;
+  font-size: 30px;
+  line-height: 38px;
+}
+
+.infoItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 18px;
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #e7e9ef;
+}
+
+.infoItem:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.iconBox {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #e8f2ff;
+  transition: all 500ms ease;
+}
+
+.iconBox img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.infoItem:hover .iconBox {
+  background: var(--theme-color);
+  transform: translateY(-5px);
+}
+
+.infoItem h4 {
+  margin-bottom: 7px;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.infoItem p,
+.infoItem a {
+  color: #666666;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.infoItem a:hover {
+  color: #031326;
+}
+
+.formInner {
+  padding: 40px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 30px;
+}
+
+.formGroupFull {
+  grid-column: 1 / -1;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--title-color);
+  font-family: var(--title-font);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.formGroup label::after {
+  color: #d82f2f;
+  content: " *";
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+  display: block;
+  width: 100%;
+  border: 1px solid #e5e7ee;
+  border-radius: 6px;
+  background: #f8f9fc;
+  padding: 15px 20px;
+  color: var(--title-color);
+  font-size: 16px;
+  line-height: 28px;
+  outline: none;
+  transition:
+    border-color 400ms ease,
+    box-shadow 400ms ease,
+    background 400ms ease;
+}
+
+.formGroup input {
+  min-height: 58px;
+}
+
+.formGroup select {
+  min-height: 58px;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #031326 50%),
+    linear-gradient(135deg, #031326 50%, transparent 50%);
+  background-position:
+    calc(100% - 22px) 26px,
+    calc(100% - 16px) 26px;
+  background-repeat: no-repeat;
+  background-size: 6px 6px;
+}
+
+.formGroup textarea {
+  min-height: 170px;
+  resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  border-color: var(--theme-color);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(83, 176, 226, 0.18);
+}
+
+.messageBtn {
+  grid-column: 1 / -1;
+}
+
+.feedbackSection {
+  position: relative;
+  padding: 50px 0 90px;
+}
+
+.feedbackShell {
+  display: grid;
+  grid-template-columns: 0.86fr 1.14fr;
+  gap: 34px;
+  align-items: stretch;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 42px;
+  box-shadow: 0 18px 60px rgba(16, 36, 83, 0.1);
+}
+
+.feedbackIntro {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 10px;
+  background: #f6faff;
+  padding: 38px;
+}
+
+.feedbackBadge {
+  display: inline-flex;
+  width: max-content;
+  margin-bottom: 15px;
+  border-radius: 30px;
+  background: rgba(83, 176, 226, 0.16);
+  padding: 6px 15px;
+  color: #031326;
+  font-family: var(--title-font);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.feedbackIntro h2 {
+  margin-bottom: 18px;
+  font-size: clamp(34px, 3.5vw, 46px);
+  line-height: 1.12;
+}
+
+.feedbackIntro p {
+  color: #666666;
+  font-size: 17px;
+  line-height: 29px;
+}
+
+.feedbackForm {
+  display: grid;
+  gap: 22px;
+}
+
+.feedbackTwoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.ratingGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.ratingGroup legend {
+  margin-bottom: 0;
+  color: var(--title-color);
+  font-family: var(--title-font);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.ratingOptions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ratingOptions label {
+  cursor: pointer;
+}
+
+.ratingOptions input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ratingOptions span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 62px;
+  min-height: 44px;
+  border: 1px solid #e5e7ee;
+  border-radius: 24px;
+  background: #f8f9fc;
+  color: #52606f;
+  font-weight: 600;
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    transform 300ms ease;
+}
+
+.ratingOptions input:checked + span,
+.ratingOptions span:hover {
+  border-color: var(--theme-color);
+  background: #e8f2ff;
+  color: #031326;
+  transform: translateY(-2px);
+}
+
+.feedbackButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: max-content;
+}
+
+.feedbackSuccess {
+  border-radius: 8px;
+  background: #ecfdf3;
+  padding: 12px 15px;
+  color: #166534;
+  font-weight: 600;
+}
+
+.mapSection {
+  position: relative;
+  padding: 0 0 80px;
+}
+
+.mapBox {
+  overflow: hidden;
+  border-radius: 10px;
+  background: #e9edf5;
+  box-shadow: 0 10px 50px rgba(16, 36, 83, 0.08);
+}
+
+.mapBox iframe {
+  display: block;
+  width: 100%;
+  height: 500px;
+  border: 0;
+}
+
+@media (max-width: 991px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .feedbackShell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .contactSection {
+    padding: 70px 0 30px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .feedbackSection {
+    padding: 30px 0 70px;
+  }
+
+  .infoBox,
+  .formInner,
+  .feedbackShell,
+  .feedbackIntro {
+    padding: 32px 24px;
+  }
+
+  .feedbackTwoCol {
+    grid-template-columns: 1fr;
+  }
+
+  .mapSection {
+    padding-bottom: 60px;
+  }
+
+  .mapBox iframe {
+    height: 380px;
+  }
+}
+
+@media (max-width: 420px) {
+  .infoItem {
+    grid-template-columns: 1fr;
+  }
+}

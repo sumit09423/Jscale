@@ -1,0 +1,7 @@
+{
+  "/page": "app/page.js",
+  "/about-us/page": "app/about-us/page.js",
+  "/services/career-coaching/page": "app/services/career-coaching/page.js",
+  "/candidate/auth/sign-in/page": "app/candidate/auth/sign-in/page.js",
+  "/services/page": "app/services/page.js"
+}
