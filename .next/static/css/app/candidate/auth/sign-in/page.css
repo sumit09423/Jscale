@@ -339,12 +339,16 @@
 .about-us_mobileToggle__7hLEC {
   display: none;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  border: 1px solid rgba(3, 19, 38, 0.14);
   border-radius: 50%;
-  background: var(--theme-color);
+  background: #000000;
   color: #ffffff;
   cursor: pointer;
+  z-index: 2;
 }
 
 .about-us_mobileMenu__7v_3R {
@@ -1563,21 +1567,53 @@
 
 @media (max-width: 599px) {
   .about-us_mainHeader__2HVIK {
-    top: 16px;
+    top: 12px;
+    left: 0;
+    width: 100%;
+    padding: 0 12px;
   }
 
   .about-us_headerOuter__TMldT {
-    min-height: 76px;
+    min-height: 72px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .about-us_mainHeader__2HVIK .about-us_autoContainer__Zz3HJ {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
 
   .about-us_logoBox__dSDPk {
+    flex: 1 1 auto;
+    min-width: 0;
     padding-left: 0;
+    overflow: hidden;
   }
 
   .about-us_logoBox__dSDPk img,
   .about-us_logoBox__dSDPk .about-us_brandLogo__6wkI3 {
-    height: 48px;
-    max-width: min(180px, calc(100vw - 105px));
+    height: 42px;
+    width: auto;
+    max-width: 100%;
+    -o-object-fit: contain;
+       object-fit: contain;
+    -o-object-position: left center;
+       object-position: left center;
+  }
+
+  .about-us_mobileToggle__7hLEC {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    margin-left: 8px;
   }
 
   .about-us_mobileLogo__gag3Q .about-us_brandLogo__6wkI3 {

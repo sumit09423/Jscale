@@ -339,12 +339,16 @@
 .page_mobileToggle__Gp7d8 {
   display: none;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  border: 1px solid rgba(3, 19, 38, 0.14);
   border-radius: 50%;
-  background: var(--theme-color);
+  background: #000000;
   color: #ffffff;
   cursor: pointer;
+  z-index: 2;
 }
 
 .page_mobileMenu__udg2A {
@@ -481,6 +485,7 @@
   height: 100%;
 }
 
+.page_mobileNavGroup__Zz0mv .page_mobileChildLink__D_L5K,
 .page_mobileChildLink__D_L5K {
   margin-left: 12px;
   padding-left: 20px !important;
@@ -1683,41 +1688,53 @@
 
 @media (max-width: 599px) {
   .page_mainHeader__Rrn43 {
-    top: 16px;
-    right: 0;
-    width: 100vw;
-    padding: 0 14px;
+    top: 12px;
+    left: 0;
+    width: 100%;
+    padding: 0 12px;
   }
 
   .page_headerOuter__DtxmD {
-    min-height: 76px;
+    min-height: 72px;
     width: 100%;
-    max-width: calc(100vw - 28px);
-    margin: 0 auto;
-    gap: 12px;
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 12px;
+    gap: 10px;
   }
 
   .page_mainHeader__Rrn43 .page_autoContainer__yfz19 {
+    width: 100%;
+    max-width: 100%;
     padding: 0;
   }
 
   .page_logoBox__RrKsN {
-    padding-left: 0;
+    flex: 1 1 auto;
     min-width: 0;
+    padding-left: 0;
+    overflow: hidden;
   }
 
   .page_logoBox__RrKsN img,
   .page_logoBox__RrKsN .page_brandLogo__TpAOg {
-    height: 48px;
-    max-width: min(180px, calc(100vw - 105px));
-  }
-
-  .page_mobileLogo___KR1f .page_brandLogo__TpAOg {
-    height: 44px;
+    height: 42px;
     width: auto;
-    max-width: 180px;
+    max-width: 100%;
     -o-object-fit: contain;
        object-fit: contain;
+    -o-object-position: left center;
+       object-position: left center;
+  }
+
+  .page_mobileToggle__Gp7d8 {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    margin-left: 8px;
   }
 
   .page_subscribeSection__eqgGq {
@@ -1756,18 +1773,6 @@
   .page_footerBrand__LFSWn h4,
   .page_footerLinks__ZWbAq h4 {
     font-size: 18px;
-  }
-
-  .page_mobileToggle__Gp7d8 {
-    position: fixed;
-    top: 29px;
-    right: max(24px, calc(100vw - 362px));
-    z-index: 120;
-    width: 50px;
-    height: 50px;
-    flex: 0 0 50px;
-    margin-left: auto;
-    transform: none;
   }
 
   .page_mobilePanel__XOGoy {
