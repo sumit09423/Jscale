@@ -12,7 +12,7 @@ export function SiteHeader() {
       className="navbar absolute top-0 left-0 z-30 w-full bg-transparent"
       style={{ paddingTop: "var(--safe-top)" }}
     >
-      <div className="nav-shell mx-auto flex h-16 w-[calc(100%-1rem)] max-w-6xl items-center justify-between gap-2 rounded-b-[1.5rem] bg-white px-4 sm:h-[4.5rem] sm:w-full sm:gap-3 sm:rounded-b-[1.75rem] sm:px-5 lg:h-16 lg:px-8">
+      <div className="nav-shell mx-auto flex h-14 w-[calc(100%-1rem)] max-w-6xl items-center justify-between gap-3 rounded-b-2xl bg-white px-3 sm:h-16 sm:w-full sm:rounded-b-[1.75rem] sm:px-5 lg:h-[4.25rem] lg:px-8">
         <SiteLogo />
 
         <nav
@@ -40,8 +40,8 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-0.5 sm:gap-2">
-          <SocialLinks variant="navbar" />
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <SocialLinks variant="navbar" className="hidden lg:flex" />
           <Link
             href={ctaLink.href}
             className="hidden min-h-10 items-center rounded-full bg-black px-5 py-2 text-sm font-medium text-white transition-opacity duration-200 hover:opacity-90 lg:inline-flex"

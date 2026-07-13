@@ -80,11 +80,11 @@ export function MobileNav() {
               paddingRight: "var(--safe-right)",
             }}
           >
-            <div className="flex items-center justify-between border-b border-zinc-100 px-5 pb-4">
-              <SiteLogo />
+            <div className="flex items-center justify-between gap-3 border-b border-zinc-100 px-4 pb-3">
+              <SiteLogo size="sm" onClick={closeMenu} />
               <button
                 type="button"
-                className="inline-flex size-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100"
+                className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100"
                 aria-label="Close menu"
                 onClick={closeMenu}
               >
@@ -200,7 +200,7 @@ export function MobileNav() {
     <>
       <button
         type="button"
-        className="inline-flex size-11 min-tap items-center justify-center rounded-full text-zinc-700 lg:hidden"
+        className="inline-flex size-10 min-tap items-center justify-center rounded-full text-zinc-700 transition-colors hover:bg-zinc-100 lg:hidden"
         aria-expanded={open}
         aria-controls="mobile-menu"
         aria-label={open ? "Close menu" : "Open menu"}
