@@ -34,7 +34,7 @@ export const siteConfig = {
   phone: "+1 (412) 203-6859",
   whatsapp: "+91 8233633213",
   social: {
-    instagram: "https://www.instagram.com/jscalemarketing/",
+    instagram: "https://www.instagram.com/jscalesolution/",
     whatsapp: "https://wa.me/918233633213",
   },
   address: {
